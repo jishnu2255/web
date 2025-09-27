@@ -4,582 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OPULER | Interior Designs and General Maintenance</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="style1.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-<style>
-    /* General Styles */
-    :root {
-        --gold: #ffd700;
-        --light-gold: #ffcc52;
-        --dark-bg: #1a1a1a;
-        --dark-card: #222;
-        --dark-header: #111;
-        --text-light: #f5f5f5;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Poppins', Arial, sans-serif;
-        background: var(--dark-bg);
-        color: var(--text-light);
-        overflow-x: hidden; /* Prevents horizontal scroll */
-    }
-
-    a {
-        text-decoration: none;
-        color: var(--light-gold);
-    }
-
-    h1, h2 {
-        color: var(--gold);
-        margin-bottom: 20px;
-    }
-
-    h2 {
-        font-size: 2.5rem;
-        text-align: center;
-    }
-
-    p {
-        line-height: 1.6;
-        color: #ccc;
-    }
-
-    section {
-        padding: 60px 10%;
-    }
-
-    /* Header & Navigation */
-    header {
-        background: var(--dark-header);
-        padding: 15px 5%;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logo img {
-        height: 50px;
-        filter: invert(1) brightness(2);
-    }
-
-    .nav-links {
-        list-style: none;
-        display: flex;
-        gap: 30px;
-    }
-
-    .nav-links li a {
-        color: var(--text-light);
-        font-weight: 600;
-        transition: color 0.3s ease;
-    }
-
-    .nav-links li a:hover {
-        color: var(--gold);
-    }
-
-    .menu-toggle {
-        display: none; /* Hidden on desktop */
-        font-size: 1.5rem;
-        color: var(--text-light);
-        cursor: pointer;
-    }
-
-    /* CTA Button */
-    .cta-button {
-        display: inline-block;
-        padding: 12px 28px;
-        font-size: 1rem;
-        background: var(--gold);
-        color: var(--dark-header);
-        border: none;
-        border-radius: 8px;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 4px 14px rgba(255, 221, 60, 0.3);
-        transition: all 0.3s ease;
-    }
-
-    .cta-button:hover {
-        background: var(--light-gold);
-        transform: translateY(-3px);
-    }
-
-    /* Hero Section with Parallax */
-    .hero {
-        background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-        height: 80vh;
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        position: relative;
-    }
-
-    .hero::after { /* Overlay for text readability */
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-    }
-
-    .hero-content {
-        z-index: 10;
-        color: white;
-    }
-
-    .hero h1 {
-        font-size: 3.5rem;
-        font-weight: 700;
-        margin-bottom: 15px;
-    }
-
-    .hero p {
-        font-size: 1.25rem;
-        margin-bottom: 30px;
-        color: #f0f0f0;
-    }
-
-    /* Services / Expertise Section */
-    .expertise {
-        background-color: var(--dark-card);
-    }
-
-    .expertise-container {
-        display: flex;
-        justify-content: space-around;
-        gap: 30px;
-        margin-top: 40px;
-    }
-
-    .expertise-card {
-        background: var(--dark-bg);
-        padding: 30px;
-        text-align: center;
-        border-radius: 10px;
-        border-bottom: 4px solid var(--gold);
-        flex-basis: 30%;
-        transition: transform 0.3s ease;
-    }
-
-    .expertise-card:hover {
-        transform: translateY(-10px);
-    }
-    
-    .expertise-card i {
-        font-size: 3rem;
-        color: var(--gold);
-        margin-bottom: 20px;
-    }
-    .expertise-card h3 {
-        margin-bottom: 15px;
-        font-size: 1.5rem;
-        color: var(--text-light);
-    }
-
-    /* Latest Work / Portfolio Section */
-    .latest-work .gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-        margin-top: 40px;
-    }
-    
-    .gallery-item {
-        position: relative;
-        overflow: hidden;
-        border-radius: 10px;
-    }
-    
-    .gallery-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.4s ease;
-    }
-
-    .gallery-item:hover img {
-        transform: scale(1.1);
-    }
-
-    .gallery-item span {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        padding: 15px;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-        color: white;
-        font-weight: 600;
-        transform: translateY(100%);
-        transition: transform 0.4s ease;
-    }
-
-    .gallery-item:hover span {
-        transform: translateY(0);
-    }
-    
-    /* Materials Section */
-    .materials {
-        background: var(--dark-card);
-    }
-    
-    .materials-container {
-        display: flex;
-        justify-content: space-between;
-        gap: 30px;
-        margin-top: 40px;
-    }
-
-    .material-card {
-        text-align: center;
-        flex-basis: 30%;
-    }
-    
-    .material-card i {
-        font-size: 3rem;
-        color: var(--gold);
-        margin-bottom: 20px;
-    }
-    
-    .material-card h3 {
-        color: var(--text-light);
-        margin-bottom: 15px;
-    }
-
-    /* About / Founder Section */
-    .founder {
-        display: flex;
-        align-items: center;
-        gap: 50px;
-    }
-    
-    .founder-image {
-        flex: 1;
-        text-align: center;
-    }
-    
-    .founder-image img {
-        max-width: 250px;
-        border-radius: 50%;
-        border: 5px solid var(--gold);
-        filter: invert(1) brightness(2);
-    }
-    
-    .founder-text {
-        flex: 2;
-    }
-    
-    .founder-text h2 {
-        text-align: left;
-    }
-
-    /* Reviews / Testimonials Section */
-    .reviews {
-        background: var(--dark-card);
-    }
-    
-    .reviews-container {
-        display: flex;
-        justify-content: space-around;
-        gap: 30px;
-        margin-top: 40px;
-    }
-    
-    .review-card {
-        background: var(--dark-bg);
-        padding: 25px;
-        border-left: 5px solid var(--gold);
-        border-radius: 8px;
-        flex-basis: 30%;
-    }
-    
-    .review-card .stars {
-        color: var(--gold);
-        margin-bottom: 15px;
-    }
-    
-    .review-card blockquote {
-        font-style: italic;
-        margin-bottom: 15px;
-    }
-    
-    .review-card cite {
-        font-weight: 700;
-        color: var(--text-light);
-    }
-
-    /* Contact Form Section */
-    .contact-form-section {
-        text-align: center;
-    }
-    
-    .contact-subtitle {
-        margin-bottom: 40px;
-    }
-    
-    .contact-form {
-        max-width: 700px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-    
-    .form-group {
-        display: flex;
-        gap: 20px;
-    }
-    
-    .contact-form input,
-    .contact-form textarea {
-        width: 100%;
-        padding: 15px;
-        background: var(--dark-card);
-        border: 1px solid #444;
-        border-radius: 5px;
-        color: var(--text-light);
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .contact-form input::placeholder,
-    .contact-form textarea::placeholder {
-        color: #999;
-    }
-    
-    .contact-form .cta-button {
-        align-self: center;
-        width: auto;
-    }
-
-    /* Footer */
-    footer {
-        background: var(--dark-header);
-        color: #aaa;
-        padding: 50px 5%;
-        border-top: 3px solid var(--gold);
-    }
-    
-    .footer-container {
-        display: flex;
-        justify-content: space-between;
-        gap: 40px;
-        margin-bottom: 40px;
-    }
-    
-    .footer-container > div {
-        flex: 1;
-    }
-    
-    .footer-logo {
-        height: 60px;
-        margin-bottom: 15px;
-        filter: invert(1) brightness(2);
-    }
-    
-    footer h3 {
-        color: var(--gold);
-        margin-bottom: 20px;
-    }
-    
-    .footer-links ul {
-        list-style: none;
-    }
-    
-    .footer-links li {
-        margin-bottom: 10px;
-    }
-    
-    .footer-links a {
-        color: #aaa;
-        transition: color 0.3s;
-    }
-
-    .footer-links a:hover {
-        color: var(--gold);
-    }
-
-    .footer-social a {
-        font-size: 1.5rem;
-        margin-right: 15px;
-        transition: color 0.3s;
-    }
-    
-    .footer-social a:hover {
-        color: white;
-    }
-    
-    .footer-bottom {
-        text-align: center;
-        border-top: 1px solid #444;
-        padding-top: 20px;
-    }
-    
-    .footer-bottom a {
-        margin-left: 15px;
-    }
-
-
-    /* ======================================= */
-    /* MEDIA QUERIES FOR RESPONSIVENESS   */
-    /* ======================================= */
-
-    /* For Tablets and Smaller Desktops (max-width: 1024px) */
-    @media (max-width: 1024px) {
-        h2 { font-size: 2.2rem; }
-        .hero h1 { font-size: 3rem; }
-        
-        .expertise-container,
-        .materials-container,
-        .reviews-container {
-            flex-wrap: wrap;
-        }
-
-        .expertise-card, .material-card, .review-card {
-            flex-basis: 48%;
-        }
-
-        .founder {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .founder-text h2 {
-            text-align: center;
-        }
-    }
-
-    /* For Mobile Devices (max-width: 768px) */
-    @media (max-width: 768px) {
-        section {
-            padding: 40px 5%;
-        }
-
-        h2 {
-            font-size: 2rem;
-        }
-
-        /* Responsive Navigation */
-        .nav-links {
-            position: absolute;
-            top: 80px; /* Height of the header */
-            left: 0;
-            background: var(--dark-header);
-            width: 100%;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
-        }
-
-        .nav-links.active {
-            max-height: 500px; /* A large enough value */
-            padding: 20px 0;
-        }
-
-        .nav-links li {
-            width: 100%;
-            text-align: center;
-            padding: 10px 0;
-        }
-        
-        .cta-button {
-            display: none; /* Hide main CTA button in nav on mobile */
-        }
-        
-        header .cta-button {
-            display: none;
-        }
-
-        .menu-toggle {
-            display: block; /* Show hamburger icon */
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 60vh;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-        }
-        .hero p {
-            font-size: 1.1rem;
-        }
-        .hero .cta-button {
-             display: inline-block; /* Ensure hero button is visible */
-             padding: 14px 25px;
-             font-size: 1rem;
-        }
-
-        /* Stacking Sections */
-        .expertise-container,
-        .materials-container,
-        .reviews-container {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .expertise-card,
-        .material-card,
-        .review-card {
-            flex-basis: 100%;
-            width: 95%;
-        }
-
-        /* Contact Form */
-        .form-group {
-            flex-direction: column;
-        }
-
-        /* Footer */
-        .footer-container {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .footer-social {
-            margin-top: 20px;
-        }
-    }
-</style>
 </head>
 <body>
 
     <header>
         <nav>
             <div class="logo">
-                <img src="https://i.ibb.co/L5rC12T/opular-logo.png" alt="OPULER Logo">
+                <img src="opular-logo.png" alt="OPULER Logo">
             </div>
-            <ul class="nav-links" id="nav-links">
+             <ul class="nav-links" id="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#services">Services</a></li>
@@ -594,7 +29,7 @@
     </header>
 
     <main>
-        <section id="home" class="hero">
+        <section id="home" class="hero parallax">
             <div class="hero-content">
                 <h1>Creating Spaces You'll Love to Live In</h1>
                 <p>Transforming houses into homes, one inspired design at a time.</p>
@@ -611,26 +46,31 @@
                     <p>Crafting elegant and timeless living spaces tailored to you.</p>
                 </div>
                 <div class="expertise-card">
-                    <i class="fa-solid fa-building"></i>
-                    <h3>Commercial Spaces</h3>
+                    <i class="fa-solid fa-hammer"></i>
+                    <h3>Maintanace</h3>
                     <p>Designing functional and inspiring environments for business.</p>
                 </div>
                 <div class="expertise-card">
-                    <i class="fa-solid fa-compass-drafting"></i>
-                    <h3>E-Design</h3>
+                    <i class="fa-solid fa-couch"></i>
+                    <h3>Premium Furnitures</h3>
+                    <p>Premium Quality Self Factory made Furnitures </p>
+                </div>
+                <div class="expertise-card">
+                    <i class="fa-solid fa-sheet-plastic"></i>
+                    <h3>Premium Raw Materials</h3>
                     <p>Professional interior design services delivered entirely online.</p>
                 </div>
             </div>
         </section>
 
         <section id="portfolio" class="latest-work">
-              <h2>Our Latest Work</h2>
-              <div class="gallery">
+             <h2>Our Latest Work</h2>
+             <div class="gallery">
                   <div class="gallery-item"><img src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1854&q=80" alt="Kitchen Design"><span>Hillside Flares</span></div>
                   <div class="gallery-item"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1932&q=80" alt="Living Room Design"><span>Elsa L. Gardens</span></div>
                   <div class="gallery-item"><img src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1780&q=80" alt="Bedroom Design"><span>Hillside Havens</span></div>
-                  <div class="gallery-item"><img src="https://images.unsplash.com/photo-1598928636135-d146006a9206?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Office Design"><span>Modern Workspace</span></div>
-              </div>
+                  <div class="gallery-item"><img src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1854&q=80" alt="Office Design"><span>Modern Workspace</span></div>
+             </div>
         </section>
 
         <section id="materials" class="materials">
@@ -656,12 +96,12 @@
 
         <section id="about" class="founder">
             <div class="founder-image">
-                <img src="https://i.ibb.co/L5rC12T/opular-logo.png" alt="Founder Portrait">
+                <img src="opular-logo.png" alt="Founder Portrait">
             </div>
             <div class="founder-text">
                 <h2>Our Company</h2>
-                <p>Founded in 2022, OPULER is a team of passionate designers. We believe in creating environments that reflect timeless design and fine craftsmanship. Our goal is to craft spaces that are not only beautiful but also deeply personal and functional.</p>
-                <a href="#" class="cta-button" style="margin-top: 20px;">Learn More About Us</a>
+                <p>Founded in 2022, OPULER is a team of passionate designers. We believe in creating environments that reflect timeless design and fine craftsmanship.</p>
+                <a href="#" class="cta-button">Learn More About Us</a>
             </div>
         </section>
 
@@ -695,7 +135,7 @@
         <section id="contact" class="contact-form-section">
             <h2>Get In Touch</h2>
             <p class="contact-subtitle">Have a project in mind? We'd love to hear from you.</p>
-            <form class="contact-form">
+            <form class="contact-form" action="https://formspree.io/f/mgvnokgy" method="POST">
                 <div class="form-group">
                     <input type="text" id="name" name="name" placeholder="Your Name" required>
                     <input type="email" id="email" name="email" placeholder="Your Email" required>
@@ -703,43 +143,34 @@
                 <textarea name="message" id="message" rows="6" placeholder="Tell us about your project..." required></textarea>
                 <button type="submit" class="cta-button">Send Message</button>
             </form>
-        </section>
+            </section>
     </main>
 
     <footer>
         <div class="footer-container">
             <div class="footer-about">
-                  <img src="https://i.ibb.co/L5rC12T/opular-logo.png" alt="OPULER Logo" class="footer-logo">
-                  <p>Designing a better everyday.</p>
+                 <img src="opular-logo.png" alt="OPULER Logo" class="footer-logo">
+                 <p>Designing a better everyday.</p>
             </div>
-            <div class="footer-links">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#portfolio">Portfolio</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
             </div>
             <div class="footer-contact">
                 <h3>Contact Info</h3>
-                <p>123 Design Blvd, Suite 464<br>CreativeTown, CA 21899</p>
+                <p>Dubai,Kerala<br>Kollam Junction </p>
                 <p>hello@opulerdesigns.com</p>
             </div>
             <div class="footer-social">
                 <h3>Follow Us</h3>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-pinterest"></i></a>
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/opuler_designs"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.instagram.com/opuler_designs"><i class="fab fa-pinterest"></i></a>
+                <a href="https://www.instagram.com/opuler_designs"><i class="fab fa-facebook-f"></i></a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 OPULER Interior Designs. All Rights Reserved.</p>
+            <p>&copy; 2025 OPULER Interior Designs and General Maintenance . All Rights Reserved.</p>
             <a href="#">Privacy Policy</a>
         </div>
     </footer>
-    
-    <script>
+        <script>
         // Simple JavaScript for toggling the mobile menu
         const menuToggle = document.getElementById('menu-toggle');
         const navLinks = document.getElementById('nav-links');
