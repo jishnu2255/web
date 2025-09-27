@@ -33,6 +33,7 @@ a { color: var(--primary-gold); text-decoration: none; }
 section { padding: 80px 5%; }
 
 .cta-button {
+    margin-bottom: 5px;
     display: inline-block;
     background-color: var(--primary-gold);
     color: var(--primary-black);
