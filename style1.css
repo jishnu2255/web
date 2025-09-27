@@ -106,10 +106,14 @@ nav {
 
 /* --- Gallery Grid Layout --- */
 .gallery-grid {
+    
     display: grid;
     /* This creates a responsive grid that shows as many columns as fit */
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
+}
+.gallery-grid a{
+    text-decoration: none;
 }
 
 .gallery-item {
