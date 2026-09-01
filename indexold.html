@@ -53,132 +53,6 @@
             margin-bottom: 5px;
         }
     </style>
-
-    <style>
-        /* =========================================================
-           SCROLL-CONTROLLED HERO FRAME SEQUENCE
-           Frames: bg-frames/bg-0001.png ... bg-frames/bg-0101.png
-           ========================================================= */
-
-        .hero-frame-section {
-            position: relative;
-            height: 500vh; /* 101 frames get approximately 5 viewport heights */
-            margin: 0;
-            padding: 0;
-        }
-
-        .hero-frame-sticky {
-            position: sticky;
-            top: 0;
-            width: 100%;
-            height: 100vh;
-            min-height: 600px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        .hero-frame {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            display: block;
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-
-        .hero-frame-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            background: linear-gradient(
-                to bottom,
-                rgba(0,0,0,.20),
-                rgba(0,0,0,.08) 45%,
-                rgba(0,0,0,.55)
-            );
-        }
-
-        .hero-frame-section .hero-content {
-            position: absolute;
-            z-index: 2;
-            left: 8%;
-            bottom: 14%;
-            max-width: 760px;
-            color: #fff;
-        }
-
-        .hero-frame-section .hero-content h1 {
-            margin-bottom: 14px;
-        }
-
-        .hero-frame-section .hero-content p {
-            margin-bottom: 24px;
-        }
-
-        .hero-scroll-hint {
-            position: absolute;
-            z-index: 3;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 7px;
-            color: #fff;
-            font-size: 11px;
-            letter-spacing: 3px;
-            opacity: .9;
-            transition: opacity .3s ease;
-        }
-
-        .hero-scroll-hint i {
-            animation: heroArrowBounce 1.4s infinite;
-        }
-
-        @keyframes heroArrowBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(7px); }
-        }
-
-        /* Prevent the hero text from blocking the frame interaction. */
-        .hero-frame-section .hero-content,
-        .hero-scroll-hint {
-            pointer-events: none;
-        }
-
-        .hero-frame-section .hero-content a {
-            pointer-events: auto;
-        }
-
-        @media (max-width: 768px) {
-            .hero-frame-section {
-                height: 420vh;
-            }
-
-            .hero-frame-sticky {
-                min-height: 100svh;
-                height: 100svh;
-            }
-
-            .hero-frame-section .hero-content {
-                left: 6%;
-                right: 6%;
-                bottom: 12%;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .hero-scroll-hint i {
-                animation: none;
-            }
-        }
-    </style>
-
 </head>
 <body>
 
@@ -202,29 +76,12 @@
     </header>
 
     <main>
-        <!-- SCROLL-CONTROLLED HERO -->
-        <section id="home" class="hero-frame-section">
-            <div class="hero-frame-sticky">
-                <img
-                    id="heroFrame"
-                    class="hero-frame"
-                    src="C:\Users\hp\Downloads\bg-frames\bg-0001.png"
-                    alt="OPULER interior design"
-                >
-
-                <div class="hero-frame-overlay"></div>
-
-                <div class="hero-content">
-                    <h1>Creating Spaces You'll Love to Live.</h1>
-                    <p>Transforming houses into homes, one inspired design at a time.</p>
-                    <a href="#portfolio" class="cta-button">View Our Work</a>
-                    <a href="Furnitures.html" class="cta-button">Check Our Furnitures</a>
-                </div>
-
-                <div class="hero-scroll-hint" id="heroScrollHint">
-                    <span>SCROLL</span>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
+        <section id="home" class="hero parallax">
+            <div class="hero-content">
+                <h1>Creating Spaces You'll Love to Live .</h1>
+                <p>Transforming houses into homes, one inspired design at a time.</p>
+                <a href="#portfolio" class="cta-button">View Our Work</a>
+                <a href="Furnitures.html" class="cta-button">Check Our Furnitures</a>
             </div>
         </section>
 
@@ -389,104 +246,13 @@
         </a>
     </div>
     <script>
-        // =========================================================
-        // OPULER SCROLL-CONTROLLED HERO
-        // bg-0001.png -> bg-0101.png
-        // =========================================================
+    // Simple JavaScript for toggling the mobile menu
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
 
-        const heroSection = document.querySelector('.hero-frame-section');
-        const heroFrame = document.getElementById('heroFrame');
-        const heroScrollHint = document.getElementById('heroScrollHint');
-
-        const TOTAL_FRAMES = 101;
-        const FRAME_PATH = 'bg-frames/bg-';
-        const FRAME_DIGITS = 4;
-
-        let frames = [];
-        let currentFrame = 0;
-        let ticking = false;
-
-        // Preload all 101 images so scrolling stays smooth.
-        function preloadFrames() {
-            const loaded = [];
-
-            for (let i = 1; i <= TOTAL_FRAMES; i++) {
-                const image = new Image();
-                const frameNumber = String(i).padStart(FRAME_DIGITS, '0');
-
-                image.src = `${FRAME_PATH}${frameNumber}.png`;
-
-                image.onload = () => {
-                    loaded[i - 1] = image;
-
-                    // Display the first frame as soon as it is ready.
-                    if (i === 1) {
-                        heroFrame.src = image.src;
-                    }
-                };
-
-                image.onerror = () => {
-                    console.warn(`Could not load frame: ${image.src}`);
-                };
-            }
-
-            frames = loaded;
-        }
-
-        function updateHeroFrame() {
-            if (!heroSection) return;
-
-            const rect = heroSection.getBoundingClientRect();
-            const maxScroll = heroSection.offsetHeight - window.innerHeight;
-
-            // 0 at the start of the hero, 1 at the end of the sticky hero.
-            const progress = Math.min(
-                1,
-                Math.max(0, -rect.top / maxScroll)
-            );
-
-            // Convert scroll progress into frame number 0 -> 100.
-            const frameIndex = Math.min(
-                TOTAL_FRAMES - 1,
-                Math.floor(progress * (TOTAL_FRAMES - 1))
-            );
-
-            if (frameIndex !== currentFrame && frames[frameIndex]) {
-                currentFrame = frameIndex;
-                heroFrame.src = frames[frameIndex].src;
-            }
-
-            // Hide the scroll hint after scrolling starts.
-            if (heroScrollHint) {
-                heroScrollHint.style.opacity = progress > 0.03 ? '0' : '0.9';
-            }
-
-            ticking = false;
-        }
-
-        function requestFrameUpdate() {
-            if (!ticking) {
-                window.requestAnimationFrame(updateHeroFrame);
-                ticking = true;
-            }
-        }
-
-        window.addEventListener('scroll', requestFrameUpdate, { passive: true });
-        window.addEventListener('resize', requestFrameUpdate);
-
-        // Existing mobile menu.
-        const menuToggle = document.getElementById('menu-toggle');
-        const navLinks = document.getElementById('nav-links');
-
-        if (menuToggle && navLinks) {
-            menuToggle.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-            });
-        }
-
-        // Start loading frames.
-        preloadFrames();
-        updateHeroFrame();
+    menuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
     </script>
 
 </body>
