@@ -1,808 +1,2640 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#000000">
-    <title>OPULER | Interior Designs and General Maintenance</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <style>
-        /* =========================================================
-           OPULER SCROLL-CONTROLLED HERO
-           WebP sequence:
-           bg-frames/bg-0001.webp ... bg-frames/bg-0101.webp
-           ========================================================= */
+```
+<title>OPULERGROUP</title>
 
-        .hero-frame-section {
-            position: relative;
-            height: 500vh;
-            margin: 0;
-            padding: 0;
-            background: #000;
-        }
+<link rel="stylesheet" href="style.css">
 
-        .hero-frame-sticky {
-            position: sticky;
-            top: 0;
-            width: 100%;
-            height: 100vh;
-            height: 100svh;
-            min-height: 500px;
-            overflow: hidden;
-            background: #000;
-            isolation: isolate;
-            contain: layout paint;
-        }
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
 
-        .hero-frame-canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            background: #000;
-        }
+<style>
+    /* =========================================================
+       LOADING SCREEN
+       ========================================================= */
 
-        .hero-frame-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            background: linear-gradient(
+    html.loader-active,
+    body.loader-active {
+        overflow: hidden !important;
+    }
+
+    #siteLoader {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #080706;
+        color: #fff;
+
+        opacity: 1;
+        visibility: visible;
+
+        transition:
+            opacity 0.8s cubic-bezier(.22, 1, .36, 1),
+            visibility 0.8s ease;
+    }
+
+    #siteLoader.loader-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .loader-inner {
+        width: min(380px, 80vw);
+        text-align: center;
+    }
+
+    .loader-logo {
+        width: min(180px, 42vw);
+        max-height: 100px;
+
+        object-fit: contain;
+
+        display: block;
+        margin: 0 auto 28px;
+    }
+
+    /*
+     * The actual first frame is displayed in the center.
+     */
+    .loader-preview-wrap {
+        position: relative;
+
+        width: 100%;
+        aspect-ratio: 16 / 9;
+
+        overflow: hidden;
+
+        background: #111;
+
+        margin-bottom: 25px;
+    }
+
+    #loaderPreview {
+        width: 100%;
+        height: 100%;
+
+        display: block;
+
+        object-fit: cover;
+
+        opacity: 0;
+
+        transition: opacity 0.4s ease;
+    }
+
+    #loaderPreview.loaded {
+        opacity: 1;
+    }
+
+    .loader-preview-shade {
+        position: absolute;
+        inset: 0;
+
+        pointer-events: none;
+
+        background:
+            linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, .5)
+            );
+    }
+
+    .loader-brand {
+        margin: 0 0 7px;
+
+        font-size: 13px;
+        font-weight: 500;
+
+        letter-spacing: 5px;
+    }
+
+    .loader-status {
+        margin: 0 0 15px;
+
+        font-size: 10px;
+
+        letter-spacing: 2px;
+
+        text-transform: uppercase;
+
+        opacity: .65;
+    }
+
+    .loader-progress-track {
+        width: 100%;
+        height: 2px;
+
+        background: rgba(255,255,255,.18);
+
+        overflow: hidden;
+    }
+
+    .loader-progress-bar {
+        width: 0%;
+        height: 100%;
+
+        background: #fff;
+
+        transform-origin: left center;
+
+        transition: width .15s linear;
+    }
+
+    .loader-percent {
+        margin-top: 10px;
+
+        font-size: 11px;
+
+        letter-spacing: 2px;
+
+        opacity: .8;
+    }
+
+
+    /* =========================================================
+       STICKY CONTACT BAR
+       ========================================================= */
+
+    .sticky-contact-bar {
+        position: fixed;
+
+        top: 50%;
+        right: 0;
+
+        transform: translateY(-50%);
+
+        display: flex;
+        flex-direction: column;
+
+        z-index: 1000;
+    }
+
+    .sticky-contact-bar a {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
+        width: 80px;
+        height: 80px;
+
+        padding: 5px;
+
+        color: #000;
+
+        background-color: #c5a47e;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        font-family: Arial, sans-serif;
+
+        transition: background-color .3s ease;
+
+        box-shadow:
+            -2px 2px 5px rgba(0,0,0,.2);
+    }
+
+    .sticky-contact-bar a:first-child {
+        border-top-left-radius: 10px;
+    }
+
+    .sticky-contact-bar a:last-child {
+        margin-top: 2px;
+
+        border-bottom-left-radius: 10px;
+    }
+
+    .sticky-contact-bar a:hover {
+        background-color: #d4b89a;
+    }
+
+    .sticky-contact-bar a i {
+        font-size: 28px;
+
+        margin-bottom: 5px;
+    }
+
+
+    /* =========================================================
+       SCROLL CONTROLLED HERO
+       ========================================================= */
+
+    .hero-frame-section {
+        position: relative;
+
+        /*
+         * This controls how much scrolling is available
+         * for the 101 frames.
+         *
+         * 500vh = approximately 5 screen heights.
+         */
+        height: 500vh;
+
+        margin: 0;
+        padding: 0;
+
+        background: #000;
+    }
+
+    .hero-frame-sticky {
+        position: sticky;
+
+        top: 0;
+
+        width: 100%;
+
+        height: 100vh;
+        height: 100svh;
+
+        min-height: 500px;
+
+        overflow: hidden;
+
+        background: #000;
+
+        isolation: isolate;
+
+        contain: layout paint;
+    }
+
+    /*
+     * Canvas itself.
+     */
+    .hero-frame {
+        position: absolute;
+
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        display: block;
+
+        background: #000;
+    }
+
+    .hero-frame-overlay {
+        position: absolute;
+
+        inset: 0;
+
+        z-index: 1;
+
+        pointer-events: none;
+
+        background:
+            linear-gradient(
                 to bottom,
                 rgba(0,0,0,.16),
                 rgba(0,0,0,.04) 45%,
                 rgba(0,0,0,.52)
             );
+    }
+
+    .hero-frame-section .hero-content {
+        position: absolute;
+
+        z-index: 2;
+
+        left: 8%;
+        bottom: 14%;
+
+        max-width: 760px;
+
+        color: #fff;
+    }
+
+    .hero-frame-section .hero-content h1 {
+        margin-bottom: 14px;
+    }
+
+    .hero-frame-section .hero-content p {
+        margin-bottom: 24px;
+    }
+
+    .hero-scroll-hint {
+        position: absolute;
+
+        z-index: 3;
+
+        left: 50%;
+        bottom: 30px;
+
+        transform: translateX(-50%);
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        gap: 7px;
+
+        color: #fff;
+
+        font-size: 11px;
+
+        letter-spacing: 3px;
+
+        opacity: .9;
+
+        pointer-events: none;
+
+        transition: opacity .25s ease;
+    }
+
+    .hero-scroll-hint i {
+        animation:
+            heroArrowBounce 1.4s infinite;
+    }
+
+    @keyframes heroArrowBounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(7px);
+        }
+    }
+
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @media (max-width: 768px) {
+
+        .hero-frame-section {
+            height: 450vh;
+        }
+
+        .hero-frame-sticky {
+            height: 100svh;
         }
 
         .hero-frame-section .hero-content {
-            position: absolute;
-            z-index: 2;
-            left: 8%;
-            bottom: 14%;
-            max-width: 760px;
-            color: #fff;
+            left: 6%;
+            right: 6%;
+            bottom: 12%;
         }
 
-        .hero-frame-section .hero-content h1 {
-            margin-bottom: 14px;
+        .sticky-contact-bar a {
+            width: 60px;
+            height: 65px;
         }
 
-        .hero-frame-section .hero-content p {
-            margin-bottom: 24px;
+        .sticky-contact-bar a i {
+            font-size: 22px;
         }
+    }
 
-        .hero-scroll-hint {
-            position: absolute;
-            z-index: 3;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 7px;
-            color: #fff;
-            font-size: 11px;
-            letter-spacing: 3px;
-            opacity: .9;
-            pointer-events: none;
-            transition: opacity .25s ease;
-        }
+
+    /* =========================================================
+       REDUCED MOTION
+       ========================================================= */
+
+    @media (prefers-reduced-motion: reduce) {
 
         .hero-scroll-hint i {
-            animation: heroArrowBounce 1.4s infinite;
+            animation: none;
         }
+    }
+</style>
+```
 
-        @keyframes heroArrowBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(7px); }
-        }
-
-        .hero-loading {
-            position: absolute;
-            z-index: 10;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: min(260px, 70vw);
-            color: #fff;
-            text-align: center;
-            transition: opacity .35s ease, visibility .35s ease;
-            pointer-events: none;
-        }
-
-        .hero-loading.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .hero-loading-text {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 11px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        .hero-loading-track {
-            width: 100%;
-            height: 2px;
-            background: rgba(255,255,255,.25);
-            overflow: hidden;
-        }
-
-        .hero-loading-bar {
-            width: 0%;
-            height: 100%;
-            background: #fff;
-            transition: width .1s linear;
-        }
-
-        @media (max-width: 768px) {
-            .hero-frame-section {
-                height: 450vh;
-            }
-
-            .hero-frame-sticky {
-                height: 100svh;
-                min-height: 500px;
-            }
-
-            .hero-frame-section .hero-content {
-                left: 6%;
-                right: 6%;
-                bottom: 12%;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .hero-scroll-hint i {
-                animation: none;
-            }
-        }
-    </style>
 </head>
+
 <body>
 
-    <header>
-        <nav>
-            <div class="logo">
-                <img src="opular-logo.png" alt="OPULER Logo">
-            </div>
-            <ul class="nav-links" id="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <a href="#contact" class="cta-button">GET FREE ESTIMATE</a>
-            <div class="menu-toggle" id="menu-toggle">
-                <i class="fa-solid fa-bars"></i>
-            </div>
-        </nav>
-    </header>
+```
+<!-- =========================================================
+     FULL PAGE LOADING SCREEN
+     ========================================================= -->
 
-    <main>
-        <!-- =====================================================
-             SCROLL-CONTROLLED HERO
-             The canvas displays bg-0001.webp -> bg-0101.webp.
-             ===================================================== -->
-        <section id="home" class="hero-frame-section">
-            <div class="hero-frame-sticky">
-                <canvas id="heroCanvas" class="hero-frame-canvas"></canvas>
+<div id="siteLoader">
 
-                <div class="hero-frame-overlay"></div>
+    <div class="loader-inner">
 
-                <div class="hero-content">
-                    <h1>Creating Spaces You'll Love to Live.</h1>
-                    <p>Transforming houses into homes, one inspired design at a time.</p>
-                    <a href="#portfolio" class="cta-button">View Our Work</a>
-                    <a href="Furnitures.html" class="cta-button">Check Our Furnitures</a>
-                </div>
+        <img
+            class="loader-logo"
+            src="opular-logo.png"
+            alt="OPULER"
+        >
 
-                <div class="hero-scroll-hint" id="heroScrollHint" aria-hidden="true">
-                    <span>SCROLL</span>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
 
-                <div class="hero-loading" id="heroLoading" aria-hidden="true">
-                    <span class="hero-loading-text" id="heroLoadingText">Loading</span>
-                    <div class="hero-loading-track">
-                        <div class="hero-loading-bar" id="heroLoadingBar"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <p class="loader-brand">
+            OPULER GROUP 
+        </p>
 
-        <section id="services" class="expertise">
-            <h2>Our Expertise</h2>
-            <div class="expertise-container">
-                <div class="expertise-card">
-                    <i class="fa-solid fa-house-chimney"></i>
-                    <h3>Residential Design</h3>
-                    <p>Crafting elegant and timeless living spaces tailored to you.</p>
-                </div>
-                <div class="expertise-card">
-                    <i class="fa-solid fa-hammer"></i>
-                    <h3>Maintanace</h3>
-                    <p>Designing functional and inspiring environments for business.</p>
-                </div>
-                <div class="expertise-card">
-                    <i class="fa-solid fa-couch"></i>
-                    <h3>Premium Furnitures</h3>
-                    <p>Premium Quality Self Factory made Furnitures </p>
-                </div>
-                <div class="expertise-card">
-                    <i class="fa-solid fa-sheet-plastic"></i>
-                    <h3>Premium Raw Materials</h3>
-                    <p>Professional interior design services delivered entirely online.</p>
-                </div>
-            </div>
-        </section>
+        <p
+            class="loader-status"
+            id="loaderStatus"
+        >
+            Preparing your experience
+        </p>
 
-        <section id="portfolio" class="latest-work">
-            <h2>Our Latest Work</h2>
-            <div class="gallery">
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1854&q=80" alt="Kitchen Design"><span>Hillside Flares</span></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1932&q=80" alt="Living Room Design"><span>Elsa L. Gardens</span></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1780&q=80" alt="Bedroom Design"><span>Hillside Havens</span></div>
-                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1854&q=80" alt="Office Design"><span>Modern Workspace</span></div>
-            </div>
-        </section>
+        <div class="loader-progress-track">
 
-        <section id="materials" class="materials">
-            <h2>Quality & Craftsmanship</h2>
-            <div class="materials-container">
-                <div class="material-card">
-                    <i class="fa-solid fa-tree"></i>
-                    <h3>Sustainable Woods</h3>
-                    <p>We source premium, eco-friendly hardwoods for furniture and structural elements that last a lifetime.</p>
-                </div>
-                <div class="material-card">
-                    <i class="fa-solid fa-gem"></i>
-                    <h3>Luxurious Marbles</h3>
-                    <p>From Carrara to Calacatta, we select exquisite natural stone for stunning countertops and flooring.</p>
-                </div>
-                <div class="material-card">
-                    <i class="fa-solid fa-industry"></i>
-                    <h3>Artisanal Metals</h3>
-                    <p>Custom-forged brass, bronze, and steel elements that add a touch of bespoke elegance to any space.</p>
-                </div>
-            </div>
-        </section>
+            <div
+                class="loader-progress-bar"
+                id="loaderProgressBar"
+            ></div>
 
-        <section id="about" class="founder">
-            <div class="founder-image">
-                <img src="opular-logo.png" alt="Founder Portrait">
-            </div>
-            <div class="founder-text">
-                <h2>Our Company</h2>
-                <p>Founded in 2015, OPULER is a team of passionate designers.</p>
-            </div>
-        </section>
-
-        <section class="reviews">
-            <h2>What Our Clients Say</h2>
-            <div class="review-container">
-                <div class="review-card">
-                    <blockquote>"OPULER transformed our house into a true home. The attention to detail and quality were exceptional."</blockquote>
-                    <cite>&mdash; The Ambani Family</cite>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="contact-form-section">
-            <h2>GET FREE ESTIMATE</h2>
-            <p class="contact-subtitle">Have a project in mind? We'd love to hear from you.</p>
-            <form class="contact-form" action="https://formspree.io/f/mrpzrrnv" method="POST">
-                <div class="form-group">
-                    <input type="text" id="name" name="name" placeholder="Your Name" required>
-                    <input type="email" id="email" name="email" placeholder="Your Email" required>
-                </div>
-                <div class="form-group">
-                    <input type="tel" name="contact1" placeholder="Contact Number 1" pattern="[0-9]{10}" maxlength="10" required>
-                    <input type="tel" name="contact2" placeholder="Contact Number 2" pattern="[0-9]{10}" maxlength="10" required>
-                </div>
-                <textarea name="message" id="message" rows="6" placeholder="Tell us about your project..." required></textarea>
-                <button type="submit" class="cta-button">Send Message</button>
-            </form>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-container">
-            <div class="footer-about">
-                <img src="opular-logo.png" alt="OPULER Logo" class="footer-logo">
-                <p>Designing a better ,everyday.</p>
-            </div>
         </div>
-        <div class="footer-contact">
-            <h3>Contact Info</h3>
-            <p>Dubai,Kerala<br>Kollam Junction </p>
-            <p>opulergroup@gmail.com</p>
-        </div>
-        <div class="footer-social">
-            <h3>Follow Us</h3>
-            <a href="https://www.instagram.com/opuler_designs"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.instagram.com/opuler_designs"><i class="fab fa-pinterest"></i></a>
-            <a href="https://www.instagram.com/opuler_designs"><i class="fab fa-facebook-f"></i></a>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 OPULER Interior Designs and General Maintenance . All Rights Reserved.</p>
-            <a href="#">Privacy Policy</a>
-        </div>
-    </footer>
 
-    <div class="sticky-contact-bar">
-        <a href="https://wa.me/9995808002">
-            <i class="fab fa-whatsapp"></i>
-            <span>WhatsApp</span>
-        </a>
-        <a href="#contact">
-            <i class="fas fa-envelope"></i>
-            <span>Send Mail</span>
-        </a>
+        <div
+            class="loader-percent"
+            id="loaderPercent"
+        >
+            0%
+        </div>
+
     </div>
 
-    <script>
-        (() => {
-            'use strict';
+</div>
 
-            /* =====================================================
-               PERFORMANCE SETTINGS
-               ===================================================== */
-            const TOTAL_FRAMES = 101;
-            const FRAME_FOLDER = 'bg-frames/';
-            const FRAME_PREFIX = 'bg-';
-            const FRAME_EXTENSION = '.webp';
 
-            /*
-             * The hero remains visible for this many viewport heights.
-             * Increase for slower animation, decrease for faster animation.
-             */
-            const HERO_SCROLL_HEIGHT_DESKTOP = 500;
-            const HERO_SCROLL_HEIGHT_MOBILE = 450;
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
 
-            /*
-             * Only decode a limited number of frames at once.
-             * Decoding all 101 frames to RGBA can consume hundreds of MB.
-             */
-            const MAX_DECODED_DESKTOP = 18;
-            const MAX_DECODED_MOBILE = 10;
+<header>
 
-            /* Frames loaded around the current target first. */
-            const PRIORITY_RADIUS_DESKTOP = 8;
-            const PRIORITY_RADIUS_MOBILE = 5;
+    <nav>
 
-            /*
-             * Cap the canvas backing resolution.
-             * 1.5 is enough for most desktop hero animations and is lighter
-             * than rendering a full-screen 3x/4x DPR canvas.
-             */
-            const MAX_DPR_DESKTOP = 1.5;
-            const MAX_DPR_MOBILE = 1.25;
+        <div class="logo">
 
-            /* Smoothness. Higher = more responsive, lower = more inertia. */
-            const FRAME_SMOOTHING = 0.28;
+            <img
+                src="opular-logo.png"
+                alt="OPULER Logo"
+            >
 
-            const hero = document.querySelector('.hero-frame-section');
-            const canvas = document.getElementById('heroCanvas');
-            const hint = document.getElementById('heroScrollHint');
-            const loading = document.getElementById('heroLoading');
-            const loadingBar = document.getElementById('heroLoadingBar');
-            const loadingText = document.getElementById('heroLoadingText');
+        </div>
 
-            if (!hero || !canvas) return;
 
-            const ctx = canvas.getContext('2d', {
-                alpha: false,
-                desynchronized: true
-            });
+        <ul
+            class="nav-links"
+            id="nav-links"
+        >
 
-            /*
-             * Cache entries contain decoded ImageBitmap/Image objects.
-             * The cache is intentionally bounded to avoid RAM spikes.
-             */
-            const cache = new Map();
-            const loadingPromises = new Map();
+            <li>
+                <a href="#home">
+                    Home
+                </a>
+            </li>
 
-            let cssWidth = 1;
-            let cssHeight = 1;
-            let currentFrame = 0;
-            let targetFrame = 0;
-            let lastDrawnFrame = -1;
-            let renderRAF = 0;
-            let scrollRAF = 0;
-            let loadedCount = 0;
-            let totalLoadStarted = 0;
-            let firstFrameReady = false;
-            let lastScrollDirection = 1;
+            <li>
+                <a href="#about">
+                    About
+                </a>
+            </li>
 
-            function isMobile() {
-                return window.matchMedia('(max-width: 768px)').matches;
-            }
+            <li>
+                <a href="#services">
+                    Services
+                </a>
+            </li>
 
-            function maxCacheSize() {
-                return isMobile()
-                    ? MAX_DECODED_MOBILE
-                    : MAX_DECODED_DESKTOP;
-            }
+            <li>
+                <a href="#portfolio">
+                    Portfolio
+                </a>
+            </li>
 
-            function priorityRadius() {
-                return isMobile()
-                    ? PRIORITY_RADIUS_MOBILE
-                    : PRIORITY_RADIUS_DESKTOP;
-            }
+            <li>
+                <a href="#contact">
+                    Contact
+                </a>
+            </li>
 
-            function maxDPR() {
-                return isMobile()
-                    ? MAX_DPR_MOBILE
-                    : MAX_DPR_DESKTOP;
-            }
+        </ul>
 
-            function frameURL(index) {
-                const number = String(index + 1).padStart(4, '0');
-                return `${FRAME_FOLDER}${FRAME_PREFIX}${number}${FRAME_EXTENSION}`;
-            }
 
-            function updateLoadingUI() {
-                if (!loadingBar) return;
+        <a
+            href="#contact"
+            class="cta-button"
+        >
+            GET FREE ESTIMATE
+        </a>
 
-                /* Progress represents frames decoded into the browser cache. */
-                const percent = Math.round(
-                    Math.min(100, (loadedCount / TOTAL_FRAMES) * 100)
+
+        <div
+            class="menu-toggle"
+            id="menu-toggle"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main>
+
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section
+        id="home"
+        class="hero-frame-section"
+    >
+
+        <div class="hero-frame-sticky">
+
+            <!--
+                Canvas displays:
+
+                bg-0001.webp
+                bg-0002.webp
+                ...
+                bg-0101.webp
+            -->
+            <canvas
+                id="heroCanvas"
+                class="hero-frame"
+                aria-label="OPULER interior design animation"
+            ></canvas>
+
+
+            <div class="hero-frame-overlay"></div>
+
+
+            <div class="hero-content">
+
+                <h1>
+                    Creating Spaces You'll Love to Live.
+                </h1>
+
+                <p>
+                    Transforming houses into homes,
+                    one inspired design at a time.
+                </p>
+
+                <a
+                    href="#portfolio"
+                    class="cta-button"
+                >
+                    View Our Work
+                </a>
+
+                <a
+                    href="Furnitures.html"
+                    class="cta-button"
+                >
+                    Check Our Furnitures
+                </a>
+
+            </div>
+
+
+            <div
+                class="hero-scroll-hint"
+                id="heroScrollHint"
+                aria-hidden="true"
+            >
+
+                <span>
+                    SCROLL
+                </span>
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SERVICES
+         ===================================================== -->
+
+    <section
+        id="services"
+        class="expertise"
+    >
+
+        <h2>
+            Our Expertise
+        </h2>
+
+        <div class="expertise-container">
+
+            <div class="expertise-card">
+
+                <i class="fa-solid fa-house-chimney"></i>
+
+                <h3>
+                    Residential Design
+                </h3>
+
+                <p>
+                    Crafting elegant and timeless living
+                    spaces tailored to you.
+                </p>
+
+            </div>
+
+
+            <div class="expertise-card">
+
+                <i class="fa-solid fa-hammer"></i>
+
+                <h3>
+                    Maintanace
+                </h3>
+
+                <p>
+                    Designing functional and inspiring
+                    environments for business.
+                </p>
+
+            </div>
+
+
+            <div class="expertise-card">
+
+                <i class="fa-solid fa-couch"></i>
+
+                <h3>
+                    Premium Furnitures
+                </h3>
+
+                <p>
+                    Premium Quality Self Factory made
+                    Furnitures
+                </p>
+
+            </div>
+
+
+            <div class="expertise-card">
+
+                <i class="fa-solid fa-sheet-plastic"></i>
+
+                <h3>
+                    Premium Raw Materials
+                </h3>
+
+                <p>
+                    Professional interior design services
+                    delivered entirely online.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PORTFOLIO
+         ===================================================== -->
+
+    <section
+        id="portfolio"
+        class="latest-work"
+    >
+
+        <h2>
+            Our Latest Work
+        </h2>
+
+        <div class="gallery">
+
+            <div class="gallery-item">
+
+                <img
+                    src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&auto=format&fit=crop&w=1854&q=80"
+                    alt="Kitchen Design"
+                    loading="lazy"
+                >
+
+                <span>
+                    Hillside Flares
+                </span>
+
+            </div>
+
+
+            <div class="gallery-item">
+
+                <img
+                    src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-4.0.3&auto=format&fit=crop&w=1932&q=80"
+                    alt="Living Room Design"
+                    loading="lazy"
+                >
+
+                <span>
+                    Elsa L. Gardens
+                </span>
+
+            </div>
+
+
+            <div class="gallery-item">
+
+                <img
+                    src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=1780&q=80"
+                    alt="Bedroom Design"
+                    loading="lazy"
+                >
+
+                <span>
+                    Hillside Havens
+                </span>
+
+            </div>
+
+
+            <div class="gallery-item">
+
+                <img
+                    src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&auto=format&fit=crop&w=1854&q=80"
+                    alt="Office Design"
+                    loading="lazy"
+                >
+
+                <span>
+                    Modern Workspace
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MATERIALS
+         ===================================================== -->
+
+    <section
+        id="materials"
+        class="materials"
+    >
+
+        <h2>
+            Quality & Craftsmanship
+        </h2>
+
+        <div class="materials-container">
+
+            <div class="material-card">
+
+                <i class="fa-solid fa-tree"></i>
+
+                <h3>
+                    Sustainable Woods
+                </h3>
+
+                <p>
+                    We source premium, eco-friendly hardwoods
+                    for furniture and structural elements
+                    that last a lifetime.
+                </p>
+
+            </div>
+
+
+            <div class="material-card">
+
+                <i class="fa-solid fa-gem"></i>
+
+                <h3>
+                    Luxurious Marbles
+                </h3>
+
+                <p>
+                    From Carrara to Calacatta, we select
+                    exquisite natural stone for stunning
+                    countertops and flooring.
+                </p>
+
+            </div>
+
+
+            <div class="material-card">
+
+                <i class="fa-solid fa-industry"></i>
+
+                <h3>
+                    Artisanal Metals
+                </h3>
+
+                <p>
+                    Custom-forged brass, bronze, and steel
+                    elements that add a touch of bespoke
+                    elegance to any space.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ABOUT / COMPANY
+         ===================================================== -->
+
+    <section
+        id="about"
+        class="founder"
+    >
+
+        <div class="founder-image">
+
+            <img
+                src="opular-logo.png"
+                alt="Founder Portrait"
+                loading="lazy"
+            >
+
+        </div>
+
+
+        <div class="founder-text">
+
+            <h2>
+                Our Company
+            </h2>
+
+            <p>
+                Founded in 2015, OPULER is a team of passionate
+                designers. We believe in creating environments
+                that reflect timeless design and fine craftsmanship.
+            </p>
+
+            <a
+                href="#"
+                class="cta-button"
+            >
+                Learn More About Us
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         REVIEWS
+         ===================================================== -->
+
+    <section
+        id="reviews"
+        class="reviews"
+    >
+
+        <h2>
+            What Our Clients Say
+        </h2>
+
+        <div class="reviews-container">
+
+
+            <div class="review-card">
+
+                <div class="stars">
+
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+
+                </div>
+
+                <blockquote>
+                    "OPULER transformed our house into a dream
+                    home. Their attention to detail is unmatched.
+                    Absolutely breathtaking work!"
+                </blockquote>
+
+                <cite>
+                    &mdash; Dhanwanth D.
+                </cite>
+
+            </div>
+
+
+            <div class="review-card">
+
+                <div class="stars">
+
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+
+                </div>
+
+                <blockquote>
+                    "The team was professional, creative, and
+                    delivered beyond our expectations. Our new
+                    office space is both beautiful and functional."
+                </blockquote>
+
+                <cite>
+                    &mdash; Priya S.
+                </cite>
+
+            </div>
+
+
+            <div class="review-card">
+
+                <div class="stars">
+
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+
+                </div>
+
+                <blockquote>
+                    "An incredible eye for design and a pleasure
+                    to work with. They respected our budget and
+                    timeline completely."
+                </blockquote>
+
+                <cite>
+                    &mdash; The Ambani Family
+                </cite>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CONTACT
+         ===================================================== -->
+
+    <section
+        id="contact"
+        class="contact-form-section"
+    >
+
+        <h2>
+            GET FREE ESTIMATE
+        </h2>
+
+        <p class="contact-subtitle">
+            Have a project in mind?
+            We'd love to hear from you.
+        </p>
+
+
+        <form
+            class="contact-form"
+            action="https://formspree.io/f/mrpzrrnv"
+            method="POST"
+        >
+
+            <div class="form-group">
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Your Name"
+                    required
+                >
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Your Email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <input
+                    type="tel"
+                    name="contact_number_1"
+                    placeholder="Contact Number 1"
+                    pattern="[0-9]{10}"
+                    maxlength="10"
+                    required
+                >
+
+                <input
+                    type="tel"
+                    name="contact_number_2"
+                    placeholder="Contact Number 2"
+                    pattern="[0-9]{10}"
+                    maxlength="10"
+                    required
+                >
+
+            </div>
+
+
+            <textarea
+                name="message"
+                id="message"
+                rows="6"
+                placeholder="Tell us about your project..."
+                required
+            ></textarea>
+
+
+            <button
+                type="submit"
+                class="cta-button"
+            >
+                Send Message
+            </button>
+
+        </form>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer>
+
+    <div class="footer-container">
+
+        <div class="footer-about">
+
+            <img
+                src="opular-logo.png"
+                alt="OPULER Logo"
+                class="footer-logo"
+                loading="lazy"
+            >
+
+            <p>
+                Designing a better, everyday.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-contact">
+
+        <h3>
+            Contact Info
+        </h3>
+
+        <p>
+            Dubai, Kerala<br>
+            Kollam Junction
+        </p>
+
+        <p>
+            opulergroup@gmail.com
+        </p>
+
+    </div>
+
+
+    <div class="footer-social">
+
+        <h3>
+            Follow Us
+        </h3>
+
+        <a
+            href="https://www.instagram.com/opuler_designs"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+        >
+            <i class="fab fa-instagram"></i>
+        </a>
+
+        <a
+            href="https://www.instagram.com/opuler_designs"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Pinterest"
+        >
+            <i class="fab fa-pinterest"></i>
+        </a>
+
+        <a
+            href="https://www.instagram.com/opuler_designs"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+        >
+            <i class="fab fa-facebook-f"></i>
+        </a>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+            &copy; 2025 OPULER Interior Designs and
+            General Maintenance. All Rights Reserved.
+        </p>
+
+        <a href="#">
+            Privacy Policy
+        </a>
+
+    </div>
+
+</footer>
+
+
+<!-- =========================================================
+     STICKY CONTACT BAR
+     ========================================================= -->
+
+<div class="sticky-contact-bar">
+
+    <a
+        href="https://wa.me/9995808002"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+
+        <i class="fab fa-whatsapp"></i>
+
+        <span>
+            WhatsApp
+        </span>
+
+    </a>
+
+
+    <a href="#contact">
+
+        <i class="fas fa-envelope"></i>
+
+        <span>
+            Send Mail
+        </span>
+
+    </a>
+
+</div>
+
+
+<!-- =========================================================
+     OPTIMIZED FRAME ENGINE
+     ========================================================= -->
+
+<script>
+
+    (() => {
+
+        'use strict';
+
+
+        /* =====================================================
+           CONFIGURATION
+           ===================================================== */
+
+        const TOTAL_FRAMES = 101;
+
+        const FRAME_FOLDER =
+            'bg-frames/';
+
+        const FRAME_PREFIX =
+            'bg-';
+
+        const FRAME_EXTENSION =
+            '.webp';
+
+
+        /*
+         * TRUE:
+         *
+         * The loading screen remains until all 101 frames
+         * have been successfully loaded AND decoded.
+         *
+         * This is what you requested.
+         */
+        const REQUIRE_ALL_FRAMES = true;
+
+
+        /*
+         * DPR limitation.
+         *
+         * This prevents unnecessarily huge canvas buffers.
+         */
+        const DESKTOP_DPR = 1.5;
+
+        const MOBILE_DPR = 1.25;
+
+
+        /*
+         * Frame interpolation.
+         *
+         * Increase toward 0.35 for faster response.
+         *
+         * Decrease toward 0.18 for smoother movement.
+         */
+        const SMOOTHING = 0.28;
+
+
+        /*
+         * How far we search for an already available frame
+         * if something unexpected happens.
+         */
+        const FALLBACK_SEARCH_RADIUS = 8;
+
+
+        /* =====================================================
+           ELEMENTS
+           ===================================================== */
+
+        const loader =
+            document.getElementById(
+                'siteLoader'
+            );
+
+        const loaderPreview =
+            document.getElementById(
+                'loaderPreview'
+            );
+
+        const loaderProgressBar =
+            document.getElementById(
+                'loaderProgressBar'
+            );
+
+        const loaderPercent =
+            document.getElementById(
+                'loaderPercent'
+            );
+
+        const loaderStatus =
+            document.getElementById(
+                'loaderStatus'
+            );
+
+
+        const hero =
+            document.querySelector(
+                '.hero-frame-section'
+            );
+
+        const canvas =
+            document.getElementById(
+                'heroCanvas'
+            );
+
+        const hint =
+            document.getElementById(
+                'heroScrollHint'
+            );
+
+
+        if (
+            !hero ||
+            !canvas
+        ) {
+            return;
+        }
+
+
+        /* =====================================================
+           CANVAS
+           ===================================================== */
+
+        const ctx =
+            canvas.getContext(
+                '2d',
+                {
+                    alpha: false,
+                    desynchronized: true
+                }
+            );
+
+
+        /* =====================================================
+           FRAME STORAGE
+           ===================================================== */
+
+        const frames =
+            new Array(
+                TOTAL_FRAMES
+            );
+
+        const framePromises =
+            new Array(
+                TOTAL_FRAMES
+            );
+
+
+        let loadedFrames = 0;
+
+        let failedFrames = 0;
+
+
+        let currentFrame = 0;
+
+        let targetFrame = 0;
+
+
+        let canvasWidth = 1;
+
+        let canvasHeight = 1;
+
+
+        let lastDrawnFrame = -1;
+
+
+        let renderRunning = false;
+
+        let scrollQueued = false;
+
+
+        let firstFrameReady = false;
+
+
+        /* =====================================================
+           PREVENT PAGE SCROLL DURING LOADING
+           ===================================================== */
+
+        document.documentElement
+            .classList
+            .add(
+                'loader-active'
+            );
+
+        document.body
+            .classList
+            .add(
+                'loader-active'
+            );
+
+
+        /* =====================================================
+           DPR
+           ===================================================== */
+
+        const mobileQuery =
+            window.matchMedia(
+                '(max-width: 768px)'
+            );
+
+
+        function getDPR() {
+
+            const maximum =
+                mobileQuery.matches
+                    ? MOBILE_DPR
+                    : DESKTOP_DPR;
+
+
+            return Math.min(
+                window.devicePixelRatio || 1,
+                maximum
+            );
+
+        }
+
+
+        /* =====================================================
+           FRAME URL
+           ===================================================== */
+
+        function frameURL(index) {
+
+            const number =
+                String(
+                    index + 1
+                ).padStart(
+                    4,
+                    '0'
                 );
 
-                loadingBar.style.width = `${percent}%`;
 
-                if (loadingText) {
-                    loadingText.textContent =
-                        `Loading ${percent}%`;
-                }
-            }
+            return (
+                FRAME_FOLDER +
+                FRAME_PREFIX +
+                number +
+                FRAME_EXTENSION
+            );
 
-            function touchCache(index, image) {
-                if (!image) return;
+        }
 
-                /* Refresh insertion order = most recently used. */
-                if (cache.has(index)) cache.delete(index);
-                cache.set(index, image);
 
-                trimCache();
-            }
+        /* =====================================================
+           LOADER PROGRESS
+           ===================================================== */
 
-            function closeFrame(image) {
-                /* ImageBitmap exposes close(); HTMLImageElement does not. */
-                if (image && typeof image.close === 'function') {
-                    try { image.close(); } catch (_) {}
-                }
-            }
+        function updateLoaderProgress() {
 
-            function trimCache() {
-                const limit = maxCacheSize();
+            const completed =
+                loadedFrames +
+                failedFrames;
 
-                /* Never evict the currently displayed/target frame. */
-                const protectedFrames = new Set([
-                    Math.round(currentFrame),
-                    Math.round(targetFrame)
-                ]);
 
-                while (cache.size > limit) {
-                    let evicted = false;
-
-                    for (const [index, image] of cache) {
-                        if (!protectedFrames.has(index)) {
-                            cache.delete(index);
-                            closeFrame(image);
-                            evicted = true;
-                            break;
-                        }
-                    }
-
-                    if (!evicted) break;
-                }
-            }
-
-            async function loadFrame(index) {
-                if (index < 0 || index >= TOTAL_FRAMES) return null;
-
-                const cached = cache.get(index);
-                if (cached) {
-                    touchCache(index, cached);
-                    return cached;
-                }
-
-                if (loadingPromises.has(index)) {
-                    return loadingPromises.get(index);
-                }
-
-                totalLoadStarted++;
-
-                const promise = (async () => {
-                    try {
-                        let image;
-
-                        if ('createImageBitmap' in window) {
-                            const response = await fetch(frameURL(index), {
-                                cache: 'force-cache'
-                            });
-
-                            if (!response.ok) {
-                                throw new Error(`HTTP ${response.status}`);
-                            }
-
-                            const blob = await response.blob();
-                            image = await createImageBitmap(blob);
-                        } else {
-                            image = new Image();
-                            image.decoding = 'async';
-                            image.src = frameURL(index);
-                            await image.decode();
-                        }
-
-                        touchCache(index, image);
-                        loadedCount++;
-                        updateLoadingUI();
-
-                        if (index === 0 && !firstFrameReady) {
-                            firstFrameReady = true;
-                            resizeCanvas();
-                            drawFrame(0);
-
-                            if (loading) {
-                                loading.classList.add('hidden');
-                            }
-                        }
-
-                        return image;
-                    } catch (error) {
-                        console.warn(`Could not load ${frameURL(index)}`, error);
-                        return null;
-                    } finally {
-                        loadingPromises.delete(index);
-                    }
-                })();
-
-                loadingPromises.set(index, promise);
-                return promise;
-            }
-
-            function drawFrame(index) {
-                const image = cache.get(index);
-                if (!image) return false;
-
-                if (index === lastDrawnFrame) return true;
-
-                const scale = Math.max(
-                    cssWidth / image.width,
-                    cssHeight / image.height
+            const percentage =
+                Math.round(
+                    (
+                        completed /
+                        TOTAL_FRAMES
+                    ) * 100
                 );
 
-                const width = image.width * scale;
-                const height = image.height * scale;
-                const x = (cssWidth - width) * 0.5;
-                const y = (cssHeight - height) * 0.5;
 
-                ctx.clearRect(0, 0, cssWidth, cssHeight);
-                ctx.drawImage(image, x, y, width, height);
+            if (loaderProgressBar) {
 
-                lastDrawnFrame = index;
-                touchCache(index, image);
-                return true;
+                loaderProgressBar.style.width =
+                    `${percentage}%`;
+
             }
 
-            function resizeCanvas() {
-                const rect = canvas.getBoundingClientRect();
-                const width = Math.max(1, Math.round(rect.width));
-                const height = Math.max(1, Math.round(rect.height));
-                const dpr = Math.min(window.devicePixelRatio || 1, maxDPR());
 
-                const pixelWidth = Math.max(1, Math.round(width * dpr));
-                const pixelHeight = Math.max(1, Math.round(height * dpr));
+            if (loaderPercent) {
+
+                loaderPercent.textContent =
+                    `${percentage}%`;
+
+            }
+
+
+            if (loaderStatus) {
 
                 if (
-                    canvas.width !== pixelWidth ||
-                    canvas.height !== pixelHeight
+                    failedFrames > 0
                 ) {
-                    canvas.width = pixelWidth;
-                    canvas.height = pixelHeight;
 
-                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    loaderStatus.textContent =
+                        `Loading frames • ${completed}/${TOTAL_FRAMES}`;
 
-                    cssWidth = width;
-                    cssHeight = height;
-                    lastDrawnFrame = -1;
-
-                    const nearest = Math.round(currentFrame);
-                    if (cache.has(nearest)) {
-                        drawFrame(nearest);
-                    } else if (cache.has(0)) {
-                        drawFrame(0);
-                    }
-                } else {
-                    cssWidth = width;
-                    cssHeight = height;
-                }
-            }
-
-            function getScrollProgress() {
-                const rect = hero.getBoundingClientRect();
-                const distance = hero.offsetHeight - window.innerHeight;
-
-                if (distance <= 0) return 0;
-
-                return Math.max(0, Math.min(1, -rect.top / distance));
-            }
-
-            function getTargetFrame() {
-                return Math.round(
-                    getScrollProgress() * (TOTAL_FRAMES - 1)
-                );
-            }
-
-            function prioritizeAround(center) {
-                const radius = priorityRadius();
-
-                /* Always request target first. */
-                loadFrame(center);
-
-                /* Load in scroll direction first. */
-                for (let distance = 1; distance <= radius; distance++) {
-                    const first = center + distance * lastScrollDirection;
-                    const second = center - distance * lastScrollDirection;
-
-                    if (first >= 0 && first < TOTAL_FRAMES) {
-                        loadFrame(first);
-                    }
-
-                    if (second >= 0 && second < TOTAL_FRAMES) {
-                        loadFrame(second);
-                    }
-                }
-            }
-
-            function renderLoop() {
-                const delta = targetFrame - currentFrame;
-
-                if (Math.abs(delta) < 0.03) {
-                    currentFrame = targetFrame;
-                } else {
-                    currentFrame += delta * FRAME_SMOOTHING;
                 }
 
-                const frameIndex = Math.max(
-                    0,
-                    Math.min(TOTAL_FRAMES - 1, Math.round(currentFrame))
-                );
+                else if (
+                    percentage < 100
+                ) {
 
-                if (!drawFrame(frameIndex)) {
+                    loaderStatus.textContent =
+                        'Preparing your experience';
+
+                }
+
+                else {
+
+                    loaderStatus.textContent =
+                        'Experience ready';
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           LOAD + DECODE FRAME
+           ===================================================== */
+
+        async function loadFrame(index) {
+
+            if (
+                index < 0 ||
+                index >= TOTAL_FRAMES
+            ) {
+                return null;
+            }
+
+
+            if (
+                frames[index]
+            ) {
+                return frames[index];
+            }
+
+
+            if (
+                framePromises[index]
+            ) {
+                return framePromises[index];
+            }
+
+
+            framePromises[index] =
+                (async () => {
+
+                    try {
+
+                        let image;
+
+
+                        /*
+                         * Preferred method:
+                         *
+                         * Fetch WebP
+                         * ↓
+                         * Blob
+                         * ↓
+                         * ImageBitmap
+                         */
+
+                        if (
+                            'createImageBitmap'
+                            in window
+                        ) {
+
+                            const response =
+                                await fetch(
+                                    frameURL(index),
+                                    {
+                                        cache:
+                                            'force-cache'
+                                    }
+                                );
+
+
+                            if (
+                                !response.ok
+                            ) {
+
+                                throw new Error(
+                                    `HTTP ${response.status}`
+                                );
+
+                            }
+
+
+                            const blob =
+                                await response.blob();
+
+
+                            image =
+                                await createImageBitmap(
+                                    blob
+                                );
+
+                        }
+
+                        else {
+
+                            /*
+                             * Browser fallback.
+                             */
+
+                            image =
+                                new Image();
+
+                            image.decoding =
+                                'async';
+
+                            image.src =
+                                frameURL(index);
+
+                            await image.decode();
+
+                        }
+
+
+                        /*
+                         * Frame is now actually decoded.
+                         */
+
+                        frames[index] =
+                            image;
+
+
+                        loadedFrames++;
+
+
+                        updateLoaderProgress();
+
+
+                        /*
+                         * Make the first frame visible
+                         * in the loading screen.
+                         */
+
+                        if (
+                            index === 0 &&
+                            loaderPreview
+                        ) {
+
+                            loaderPreview.src =
+                                frameURL(0);
+
+                            loaderPreview.classList
+                                .add(
+                                    'loaded'
+                                );
+
+                        }
+
+
+                        /*
+                         * First hero frame is ready.
+                         */
+
+                        if (
+                            index === 0 &&
+                            !firstFrameReady
+                        ) {
+
+                            firstFrameReady =
+                                true;
+
+                            resizeCanvas();
+
+                            drawFrame(0);
+
+                        }
+
+
+                        return image;
+
+                    }
+
+                    catch (error) {
+
+                        failedFrames++;
+
+
+                        updateLoaderProgress();
+
+
+                        console.error(
+                            `Failed to load ${frameURL(index)}`,
+                            error
+                        );
+
+
+                        return null;
+
+                    }
+
+                })();
+
+
+            return framePromises[index];
+
+        }
+
+
+        /* =====================================================
+           CONTROLLED PROGRESSIVE PRELOADING
+           ===================================================== */
+
+        async function preloadAllFrames() {
+
+            let nextIndex = 0;
+
+
+            /*
+             * Detect network speed.
+             */
+
+            const connection =
+                navigator.connection ||
+                navigator.webkitConnection ||
+                navigator.mozConnection;
+
+
+            const effectiveType =
+                connection?.effectiveType ||
+                '';
+
+
+            /*
+             * Number of simultaneous frame decoders.
+             */
+
+            let workers = 5;
+
+
+            if (
+                effectiveType === 'slow-2g' ||
+                effectiveType === '2g'
+            ) {
+
+                workers = 2;
+
+            }
+
+            else if (
+                effectiveType === '3g'
+            ) {
+
+                workers = 3;
+
+            }
+
+
+            /*
+             * Worker function.
+             */
+
+            async function worker() {
+
+                while (true) {
+
+                    const index =
+                        nextIndex++;
+
+
+                    if (
+                        index >=
+                        TOTAL_FRAMES
+                    ) {
+                        return;
+                    }
+
+
+                    await loadFrame(
+                        index
+                    );
+
+
                     /*
-                     * If the requested frame is still decoding, find the
-                     * closest decoded frame. This prevents a blank canvas.
+                     * Give the browser a chance
+                     * to update the loading UI.
                      */
-                    let fallback = frameIndex;
-                    let found = false;
 
-                    for (let distance = 1; distance <= 10; distance++) {
-                        const forward = frameIndex + distance;
-                        const backward = frameIndex - distance;
+                    if (
+                        index % 3 === 0
+                    ) {
 
-                        if (forward < TOTAL_FRAMES && cache.has(forward)) {
-                            fallback = forward;
-                            found = true;
-                            break;
-                        }
+                        await new Promise(
+                            requestAnimationFrame
+                        );
 
-                        if (backward >= 0 && cache.has(backward)) {
-                            fallback = backward;
-                            found = true;
-                            break;
-                        }
                     }
 
-                    if (found) drawFrame(fallback);
                 }
 
-                trimCache();
-
-                if (Math.abs(targetFrame - currentFrame) > 0.03) {
-                    renderRAF = requestAnimationFrame(renderLoop);
-                } else {
-                    renderRAF = 0;
-                }
             }
 
-            function updateFromScroll() {
-                const nextTarget = getTargetFrame();
 
-                if (nextTarget !== targetFrame) {
-                    if (nextTarget > targetFrame) lastScrollDirection = 1;
-                    if (nextTarget < targetFrame) lastScrollDirection = -1;
+            const jobs = [];
 
-                    targetFrame = nextTarget;
-                    prioritizeAround(targetFrame);
-                }
 
-                if (hint) {
-                    const progress = getScrollProgress();
-                    hint.style.opacity = progress > 0.025 ? '0' : '.9';
-                }
+            for (
+                let i = 0;
+                i < workers;
+                i++
+            ) {
 
-                if (!renderRAF) {
-                    renderRAF = requestAnimationFrame(renderLoop);
-                }
+                jobs.push(
+                    worker()
+                );
 
-                scrollRAF = 0;
             }
 
-            function onScroll() {
-                if (scrollRAF) return;
-                scrollRAF = requestAnimationFrame(updateFromScroll);
+
+            await Promise.all(
+                jobs
+            );
+
+        }
+
+
+        /* =====================================================
+           RESIZE CANVAS
+           ===================================================== */
+
+        function resizeCanvas() {
+
+            const rect =
+                canvas.getBoundingClientRect();
+
+
+            const width =
+                Math.max(
+                    1,
+                    Math.round(
+                        rect.width
+                    )
+                );
+
+
+            const height =
+                Math.max(
+                    1,
+                    Math.round(
+                        rect.height
+                    )
+                );
+
+
+            const dpr =
+                getDPR();
+
+
+            const pixelWidth =
+                Math.round(
+                    width * dpr
+                );
+
+
+            const pixelHeight =
+                Math.round(
+                    height * dpr
+                );
+
+
+            if (
+                canvas.width !==
+                    pixelWidth ||
+                canvas.height !==
+                    pixelHeight
+            ) {
+
+                canvas.width =
+                    pixelWidth;
+
+                canvas.height =
+                    pixelHeight;
+
+
+                ctx.setTransform(
+                    dpr,
+                    0,
+                    0,
+                    dpr,
+                    0,
+                    0
+                );
+
+
+                canvasWidth =
+                    width;
+
+                canvasHeight =
+                    height;
+
+
+                lastDrawnFrame =
+                    -1;
+
+
+                if (
+                    frames[
+                        Math.round(
+                            currentFrame
+                        )
+                    ]
+                ) {
+
+                    drawFrame(
+                        Math.round(
+                            currentFrame
+                        )
+                    );
+
+                }
+
             }
 
-            async function preloadInitialFrames() {
-                /* First frame is the only blocking frame. */
-                await loadFrame(0);
+        }
 
-                /* Let the browser paint before more decoding begins. */
-                await new Promise(requestAnimationFrame);
 
-                /* Load a small initial neighborhood. */
-                const initialRadius = priorityRadius();
-                for (let i = 1; i <= initialRadius && i < TOTAL_FRAMES; i++) {
-                    await loadFrame(i);
+        /* =====================================================
+           DRAW FRAME
+           ===================================================== */
+
+        function drawFrame(index) {
+
+            const image =
+                frames[index];
+
+
+            if (
+                !image ||
+                lastDrawnFrame === index
+            ) {
+
+                return false;
+
+            }
+
+
+            const imageWidth =
+                image.width;
+
+
+            const imageHeight =
+                image.height;
+
+
+            /*
+             * object-fit: cover
+             */
+
+            const scale =
+                Math.max(
+                    canvasWidth /
+                        imageWidth,
+
+                    canvasHeight /
+                        imageHeight
+                );
+
+
+            const width =
+                imageWidth *
+                scale;
+
+
+            const height =
+                imageHeight *
+                scale;
+
+
+            const x =
+                (
+                    canvasWidth -
+                    width
+                ) / 2;
+
+
+            const y =
+                (
+                    canvasHeight -
+                    height
+                ) / 2;
+
+
+            ctx.clearRect(
+                0,
+                0,
+                canvasWidth,
+                canvasHeight
+            );
+
+
+            ctx.drawImage(
+                image,
+                x,
+                y,
+                width,
+                height
+            );
+
+
+            lastDrawnFrame =
+                index;
+
+
+            return true;
+
+        }
+
+
+        /* =====================================================
+           FALLBACK FRAME
+           ===================================================== */
+
+        function drawNearestAvailable(
+            index
+        ) {
+
+            if (
+                frames[index]
+            ) {
+
+                drawFrame(
+                    index
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * Search backwards and forwards
+             * for a decoded frame.
+             */
+
+            for (
+                let distance = 1;
+                distance <=
+                    FALLBACK_SEARCH_RADIUS;
+                distance++
+            ) {
+
+                const previous =
+                    index -
+                    distance;
+
+
+                const next =
+                    index +
+                    distance;
+
+
+                if (
+                    previous >= 0 &&
+                    frames[previous]
+                ) {
+
+                    drawFrame(
+                        previous
+                    );
+
+                    return;
+
                 }
+
+
+                if (
+                    next <
+                        TOTAL_FRAMES &&
+                    frames[next]
+                ) {
+
+                    drawFrame(
+                        next
+                    );
+
+                    return;
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           CALCULATE FRAME FROM SCROLL
+           ===================================================== */
+
+        function calculateTargetFrame() {
+
+            const rect =
+                hero.getBoundingClientRect();
+
+
+            const scrollDistance =
+                hero.offsetHeight -
+                window.innerHeight;
+
+
+            if (
+                scrollDistance <= 0
+            ) {
+
+                return 0;
+
+            }
+
+
+            let progress =
+                -rect.top /
+                scrollDistance;
+
+
+            progress =
+                Math.max(
+                    0,
+                    Math.min(
+                        1,
+                        progress
+                    )
+                );
+
+
+            return Math.round(
+                progress *
+                (
+                    TOTAL_FRAMES - 1
+                )
+            );
+
+        }
+
+
+        /* =====================================================
+           SMOOTH FRAME RENDERING
+           ===================================================== */
+
+        function renderLoop() {
+
+            const difference =
+                targetFrame -
+                currentFrame;
+
+
+            if (
+                Math.abs(
+                    difference
+                ) < 0.02
+            ) {
+
+                currentFrame =
+                    targetFrame;
+
+            }
+
+            else {
+
+                currentFrame +=
+                    difference *
+                    SMOOTHING;
+
+            }
+
+
+            const frameIndex =
+                Math.max(
+                    0,
+
+                    Math.min(
+                        TOTAL_FRAMES - 1,
+
+                        Math.round(
+                            currentFrame
+                        )
+                    )
+                );
+
+
+            drawNearestAvailable(
+                frameIndex
+            );
+
+
+            if (
+                Math.abs(
+                    targetFrame -
+                    currentFrame
+                ) > 0.02
+            ) {
+
+                requestAnimationFrame(
+                    renderLoop
+                );
+
+            }
+
+            else {
+
+                renderRunning =
+                    false;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           SCROLL UPDATE
+           ===================================================== */
+
+        function handleScroll() {
+
+            targetFrame =
+                calculateTargetFrame();
+
+
+            /*
+             * Hide SCROLL indicator after
+             * user begins scrolling.
+             */
+
+            if (hint) {
+
+                const rect =
+                    hero.getBoundingClientRect();
+
+
+                const distance =
+                    hero.offsetHeight -
+                    window.innerHeight;
+
+
+                const progress =
+                    Math.max(
+                        0,
+
+                        Math.min(
+                            1,
+
+                            -rect.top /
+                            distance
+                        )
+                    );
+
+
+                hint.style.opacity =
+                    progress > 0.025
+                        ? '0'
+                        : '.9';
+
+            }
+
+
+            if (
+                !renderRunning
+            ) {
+
+                renderRunning =
+                    true;
+
+                requestAnimationFrame(
+                    renderLoop
+                );
+
+            }
+
+
+            scrollQueued =
+                false;
+
+        }
+
+
+        function onScroll() {
+
+            if (
+                scrollQueued
+            ) {
+                return;
+            }
+
+
+            scrollQueued =
+                true;
+
+
+            requestAnimationFrame(
+                handleScroll
+            );
+
+        }
+
+
+        /* =====================================================
+           START EXPERIENCE
+           ===================================================== */
+
+        async function startExperience() {
+
+            /*
+             * Load all 101 frames.
+             */
+
+            await preloadAllFrames();
+
+
+            /*
+             * Retry failed frames.
+             */
+
+            if (
+                failedFrames > 0
+            ) {
+
+                if (loaderStatus) {
+
+                    loaderStatus.textContent =
+                        'Verifying frames...';
+
+                }
+
 
                 /*
-                 * Continue loading the complete sequence slowly in the
-                 * background. If the user scrolls, priority loads above
-                 * can reuse the same promises.
+                 * Reset failure count for retry.
                  */
-                for (let index = initialRadius + 1; index < TOTAL_FRAMES; index++) {
-                    if (!loadingPromises.has(index) && !cache.has(index)) {
-                        await loadFrame(index);
+
+                failedFrames = 0;
+
+
+                for (
+                    let i = 0;
+                    i < TOTAL_FRAMES;
+                    i++
+                ) {
+
+                    if (
+                        !frames[i]
+                    ) {
+
+                        await loadFrame(
+                            i
+                        );
+
                     }
 
-                    /* Yield every frame to keep scrolling/input responsive. */
-                    await new Promise(requestAnimationFrame);
                 }
+
             }
 
-            /* Existing mobile navigation. */
-            const menuToggle = document.getElementById('menu-toggle');
-            const navLinks = document.getElementById('nav-links');
 
-            if (menuToggle && navLinks) {
-                menuToggle.addEventListener('click', () => {
-                    navLinks.classList.toggle('active');
-                });
+            /*
+             * If every frame exists,
+             * unlock the website.
+             */
+
+            if (
+                loadedFrames ===
+                TOTAL_FRAMES
+            ) {
+
+                /*
+                 * Make sure frame 1 is displayed.
+                 */
+
+                resizeCanvas();
+
+
+                currentFrame =
+                    0;
+
+                targetFrame =
+                    0;
+
+
+                drawFrame(0);
+
+
+                if (
+                    loaderProgressBar
+                ) {
+
+                    loaderProgressBar.style.width =
+                        '100%';
+
+                }
+
+
+                if (
+                    loaderPercent
+                ) {
+
+                    loaderPercent.textContent =
+                        '100%';
+
+                }
+
+
+                if (
+                    loaderStatus
+                ) {
+
+                    loaderStatus.textContent =
+                        'Experience ready';
+
+                }
+
+
+                /*
+                 * Allow the final frame to paint.
+                 */
+
+                await new Promise(
+                    resolve =>
+                        setTimeout(
+                            resolve,
+                            300
+                        )
+                );
+
+
+                /*
+                 * Fade out loader.
+                 */
+
+                if (
+                    loader
+                ) {
+
+                    loader.classList.add(
+                        'loader-hidden'
+                    );
+
+                }
+
+
+                /*
+                 * Unlock page scrolling.
+                 */
+
+                document.documentElement
+                    .classList
+                    .remove(
+                        'loader-active'
+                    );
+
+
+                document.body
+                    .classList
+                    .remove(
+                        'loader-active'
+                    );
+
+
+                /*
+                 * Remove loader after transition.
+                 */
+
+                setTimeout(
+                    () => {
+
+                        if (
+                            loader
+                        ) {
+
+                            loader.remove();
+
+                        }
+
+                    },
+                    900
+                );
+
+
+                /*
+                 * Start at the actual
+                 * current scroll position.
+                 */
+
+                targetFrame =
+                    calculateTargetFrame();
+
+
+                currentFrame =
+                    targetFrame;
+
+
+                drawNearestAvailable(
+                    targetFrame
+                );
+
             }
 
-            /* ResizeObserver avoids unnecessary resize work. */
-            const resizeObserver = new ResizeObserver(() => {
-                resizeCanvas();
-            });
-            resizeObserver.observe(canvas);
+            else {
 
-            window.addEventListener('scroll', onScroll, { passive: true });
+                /*
+                 * Don't expose a broken hero.
+                 */
 
-            /* Handle orientation / viewport changes. */
-            window.addEventListener('resize', () => {
-                resizeCanvas();
-                trimCache();
-            }, { passive: true });
+                if (
+                    loaderStatus
+                ) {
 
-            /* Start. */
-            resizeCanvas();
-            preloadInitialFrames();
+                    loaderStatus.textContent =
+                        `Unable to load all frames (${loadedFrames}/${TOTAL_FRAMES}). Check the bg-frames folder.`;
 
-        })();
-    </script>
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           RESIZE OBSERVER
+           ===================================================== */
+
+        if (
+            'ResizeObserver' in window
+        ) {
+
+            const resizeObserver =
+                new ResizeObserver(
+                    resizeCanvas
+                );
+
+
+            resizeObserver.observe(
+                canvas
+            );
+
+        }
+
+        else {
+
+            window.addEventListener(
+                'resize',
+                resizeCanvas,
+                {
+                    passive: true
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           SCROLL LISTENER
+           ===================================================== */
+
+        window.addEventListener(
+            'scroll',
+            onScroll,
+            {
+                passive: true
+            }
+        );
+
+
+        /* =====================================================
+           MOBILE MENU
+           ===================================================== */
+
+        const menuToggle =
+            document.getElementById(
+                'menu-toggle'
+            );
+
+
+        const navLinks =
+            document.getElementById(
+                'nav-links'
+            );
+
+
+        if (
+            menuToggle &&
+            navLinks
+        ) {
+
+            menuToggle.addEventListener(
+                'click',
+                () => {
+
+                    navLinks.classList.toggle(
+                        'active'
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           INITIALIZE
+           ===================================================== */
+
+        resizeCanvas();
+
+
+        startExperience();
+
+    })();
+
+</script>
+```
 
 </body>
+
 </html>
