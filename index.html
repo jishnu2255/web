@@ -3,77 +3,114 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 ```
-<title>OPULERGROUP</title>
+<meta charset="UTF-8">
 
-<link rel="stylesheet" href="style.css">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    OPULER GROUP
+</title>
+
+<link
+    rel="stylesheet"
+    href="style.css"
+>
 
 <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 >
 
+
 <style>
+
     /* =========================================================
-       LOADING SCREEN
+       LOADER
        ========================================================= */
 
     html.loader-active,
     body.loader-active {
+
         overflow: hidden !important;
+
     }
 
+
     #siteLoader {
+
         position: fixed;
+
         inset: 0;
+
         z-index: 99999;
 
         display: flex;
+
         align-items: center;
+
         justify-content: center;
 
         background: #080706;
+
         color: #fff;
 
         opacity: 1;
+
         visibility: visible;
 
         transition:
-            opacity 0.8s cubic-bezier(.22, 1, .36, 1),
-            visibility 0.8s ease;
+            opacity .8s cubic-bezier(.22,1,.36,1),
+            visibility .8s ease;
+
     }
+
 
     #siteLoader.loader-hidden {
+
         opacity: 0;
+
         visibility: hidden;
+
         pointer-events: none;
+
     }
+
 
     .loader-inner {
+
         width: min(380px, 80vw);
+
         text-align: center;
+
     }
 
+
     .loader-logo {
-        width: min(180px, 42vw);
-        max-height: 100px;
+
+        width: min(150px, 42vw);
+
+        max-height: 90px;
 
         object-fit: contain;
 
         display: block;
+
         margin: 0 auto 28px;
+
     }
 
-    /*
-     * The actual first frame is displayed in the center.
-     */
+
     .loader-preview-wrap {
+
         position: relative;
 
         width: 100%;
+
         aspect-ratio: 16 / 9;
 
         overflow: hidden;
@@ -81,10 +118,14 @@
         background: #111;
 
         margin-bottom: 25px;
+
     }
 
+
     #loaderPreview {
+
         width: 100%;
+
         height: 100%;
 
         display: block;
@@ -93,15 +134,22 @@
 
         opacity: 0;
 
-        transition: opacity 0.4s ease;
+        transition: opacity .4s ease;
+
     }
+
 
     #loaderPreview.loaded {
+
         opacity: 1;
+
     }
 
+
     .loader-preview-shade {
+
         position: absolute;
+
         inset: 0;
 
         pointer-events: none;
@@ -110,20 +158,27 @@
             linear-gradient(
                 to bottom,
                 transparent 50%,
-                rgba(0, 0, 0, .5)
+                rgba(0,0,0,.5)
             );
+
     }
 
+
     .loader-brand {
+
         margin: 0 0 7px;
 
         font-size: 13px;
+
         font-weight: 500;
 
         letter-spacing: 5px;
+
     }
 
+
     .loader-status {
+
         margin: 0 0 15px;
 
         font-size: 10px;
@@ -133,19 +188,28 @@
         text-transform: uppercase;
 
         opacity: .65;
+
     }
+
 
     .loader-progress-track {
+
         width: 100%;
+
         height: 2px;
 
-        background: rgba(255,255,255,.18);
+        background:
+            rgba(255,255,255,.18);
 
         overflow: hidden;
+
     }
 
+
     .loader-progress-bar {
+
         width: 0%;
+
         height: 100%;
 
         background: #fff;
@@ -153,9 +217,12 @@
         transform-origin: left center;
 
         transition: width .15s linear;
+
     }
 
+
     .loader-percent {
+
         margin-top: 10px;
 
         font-size: 11px;
@@ -163,99 +230,38 @@
         letter-spacing: 2px;
 
         opacity: .8;
+
     }
+
 
 
     /* =========================================================
-       STICKY CONTACT BAR
-       ========================================================= */
-
-    .sticky-contact-bar {
-        position: fixed;
-
-        top: 50%;
-        right: 0;
-
-        transform: translateY(-50%);
-
-        display: flex;
-        flex-direction: column;
-
-        z-index: 1000;
-    }
-
-    .sticky-contact-bar a {
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: center;
-        justify-content: center;
-
-        width: 80px;
-        height: 80px;
-
-        padding: 5px;
-
-        color: #000;
-
-        background-color: #c5a47e;
-
-        text-decoration: none;
-
-        font-size: 12px;
-
-        font-family: Arial, sans-serif;
-
-        transition: background-color .3s ease;
-
-        box-shadow:
-            -2px 2px 5px rgba(0,0,0,.2);
-    }
-
-    .sticky-contact-bar a:first-child {
-        border-top-left-radius: 10px;
-    }
-
-    .sticky-contact-bar a:last-child {
-        margin-top: 2px;
-
-        border-bottom-left-radius: 10px;
-    }
-
-    .sticky-contact-bar a:hover {
-        background-color: #d4b89a;
-    }
-
-    .sticky-contact-bar a i {
-        font-size: 28px;
-
-        margin-bottom: 5px;
-    }
-
-
-    /* =========================================================
-       SCROLL CONTROLLED HERO
+       SCROLL FRAME HERO
        ========================================================= */
 
     .hero-frame-section {
+
         position: relative;
 
         /*
-         * This controls how much scrolling is available
-         * for the 101 frames.
+         * Total scroll distance for the animation.
          *
-         * 500vh = approximately 5 screen heights.
+         * Increase this if you want the animation to play
+         * slower over a longer scrolling distance.
          */
         height: 500vh;
 
         margin: 0;
+
         padding: 0;
 
         background: #000;
+
     }
 
+
     .hero-frame-sticky {
+
         position: sticky;
 
         top: 0;
@@ -263,6 +269,7 @@
         width: 100%;
 
         height: 100vh;
+
         height: 100svh;
 
         min-height: 500px;
@@ -274,25 +281,32 @@
         isolation: isolate;
 
         contain: layout paint;
+
     }
 
+
     /*
-     * Canvas itself.
+     * Canvas
      */
     .hero-frame {
+
         position: absolute;
 
         inset: 0;
 
         width: 100%;
+
         height: 100%;
 
         display: block;
 
         background: #000;
+
     }
 
+
     .hero-frame-overlay {
+
         position: absolute;
 
         inset: 0;
@@ -308,35 +322,51 @@
                 rgba(0,0,0,.04) 45%,
                 rgba(0,0,0,.52)
             );
+
     }
 
+
     .hero-frame-section .hero-content {
+
         position: absolute;
 
         z-index: 2;
 
         left: 8%;
+
         bottom: 14%;
 
         max-width: 760px;
 
         color: #fff;
+
     }
 
-    .hero-frame-section .hero-content h1 {
+
+    .hero-frame-section
+    .hero-content h1 {
+
         margin-bottom: 14px;
+
     }
 
-    .hero-frame-section .hero-content p {
+
+    .hero-frame-section
+    .hero-content p {
+
         margin-bottom: 24px;
+
     }
+
 
     .hero-scroll-hint {
+
         position: absolute;
 
         z-index: 3;
 
         left: 50%;
+
         bottom: 30px;
 
         transform: translateX(-50%);
@@ -360,24 +390,126 @@
         pointer-events: none;
 
         transition: opacity .25s ease;
+
     }
 
+
     .hero-scroll-hint i {
+
         animation:
             heroArrowBounce 1.4s infinite;
+
     }
+
 
     @keyframes heroArrowBounce {
 
         0%,
         100% {
+
             transform: translateY(0);
+
         }
 
         50% {
+
             transform: translateY(7px);
+
         }
+
     }
+
+
+
+    /* =========================================================
+       STICKY CONTACT BAR
+       ========================================================= */
+
+    .sticky-contact-bar {
+
+        position: fixed;
+
+        top: 50%;
+
+        right: 0;
+
+        transform: translateY(-50%);
+
+        display: flex;
+
+        flex-direction: column;
+
+        z-index: 1000;
+
+    }
+
+
+    .sticky-contact-bar a {
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        justify-content: center;
+
+        width: 80px;
+
+        height: 80px;
+
+        padding: 5px;
+
+        color: #000;
+
+        background-color: #c5a47e;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        font-family: Arial, sans-serif;
+
+        transition:
+            background-color .3s ease;
+
+        box-shadow:
+            -2px 2px 5px rgba(0,0,0,.2);
+
+    }
+
+
+    .sticky-contact-bar a:first-child {
+
+        border-top-left-radius: 10px;
+
+    }
+
+
+    .sticky-contact-bar a:last-child {
+
+        margin-top: 2px;
+
+        border-bottom-left-radius: 10px;
+
+    }
+
+
+    .sticky-contact-bar a:hover {
+
+        background-color: #d4b89a;
+
+    }
+
+
+    .sticky-contact-bar a i {
+
+        font-size: 28px;
+
+        margin-bottom: 5px;
+
+    }
+
 
 
     /* =========================================================
@@ -387,28 +519,58 @@
     @media (max-width: 768px) {
 
         .hero-frame-section {
+
+            /*
+             * Slightly shorter on mobile.
+             */
             height: 450vh;
+
         }
+
 
         .hero-frame-sticky {
+
             height: 100svh;
+
         }
 
-        .hero-frame-section .hero-content {
+
+        .hero-frame-section
+        .hero-content {
+
             left: 6%;
+
             right: 6%;
+
             bottom: 12%;
+
         }
+
 
         .sticky-contact-bar a {
+
             width: 60px;
+
             height: 65px;
+
         }
 
+
         .sticky-contact-bar a i {
+
             font-size: 22px;
+
         }
+
+
+        .loader-inner {
+
+            width: min(340px, 84vw);
+
+        }
+
     }
+
 
 
     /* =========================================================
@@ -418,9 +580,13 @@
     @media (prefers-reduced-motion: reduce) {
 
         .hero-scroll-hint i {
+
             animation: none;
+
         }
+
     }
+
 </style>
 ```
 
@@ -430,12 +596,13 @@
 
 ```
 <!-- =========================================================
-     FULL PAGE LOADING SCREEN
+     LOADING SCREEN
      ========================================================= -->
 
 <div id="siteLoader">
 
     <div class="loader-inner">
+
 
         <img
             class="loader-logo"
@@ -444,9 +611,23 @@
         >
 
 
+        <!--
+            This automatically switches between:
+
+            Desktop:
+            bg-frames/bg-0001.webp
+
+            Mobile:
+            mbg-frames/mbg-0001.webp
+        -->
+
+        
+
+
         <p class="loader-brand">
-            OPULER GROUP 
+            OPULER
         </p>
+
 
         <p
             class="loader-status"
@@ -454,6 +635,7 @@
         >
             Preparing your experience
         </p>
+
 
         <div class="loader-progress-track">
 
@@ -464,6 +646,7 @@
 
         </div>
 
+
         <div
             class="loader-percent"
             id="loaderPercent"
@@ -471,9 +654,11 @@
             0%
         </div>
 
+
     </div>
 
 </div>
+
 
 
 <!-- =========================================================
@@ -483,6 +668,7 @@
 <header>
 
     <nav>
+
 
         <div class="logo">
 
@@ -549,9 +735,11 @@
 
         </div>
 
+
     </nav>
 
 </header>
+
 
 
 <!-- =========================================================
@@ -572,14 +760,7 @@
 
         <div class="hero-frame-sticky">
 
-            <!--
-                Canvas displays:
 
-                bg-0001.webp
-                bg-0002.webp
-                ...
-                bg-0101.webp
-            -->
             <canvas
                 id="heroCanvas"
                 class="hero-frame"
@@ -587,19 +768,23 @@
             ></canvas>
 
 
-            <div class="hero-frame-overlay"></div>
+            <div
+                class="hero-frame-overlay"
+            ></div>
 
 
             <div class="hero-content">
 
                 <h1>
-                    Creating Spaces You'll Love to Live.
+                    Creating Spaces You'll Love to Live .
                 </h1>
+
 
                 <p>
                     Transforming houses into homes,
                     one inspired design at a time.
                 </p>
+
 
                 <a
                     href="#portfolio"
@@ -607,6 +792,7 @@
                 >
                     View Our Work
                 </a>
+
 
                 <a
                     href="Furnitures.html"
@@ -628,13 +814,17 @@
                     SCROLL
                 </span>
 
-                <i class="fa-solid fa-chevron-down"></i>
+                <i
+                    class="fa-solid fa-chevron-down"
+                ></i>
 
             </div>
+
 
         </div>
 
     </section>
+
 
 
     <!-- =====================================================
@@ -650,19 +840,23 @@
             Our Expertise
         </h2>
 
+
         <div class="expertise-container">
+
 
             <div class="expertise-card">
 
-                <i class="fa-solid fa-house-chimney"></i>
+                <i
+                    class="fa-solid fa-house-chimney"
+                ></i>
 
                 <h3>
                     Residential Design
                 </h3>
 
                 <p>
-                    Crafting elegant and timeless living
-                    spaces tailored to you.
+                    Crafting elegant and timeless
+                    living spaces tailored to you.
                 </p>
 
             </div>
@@ -670,7 +864,9 @@
 
             <div class="expertise-card">
 
-                <i class="fa-solid fa-hammer"></i>
+                <i
+                    class="fa-solid fa-hammer"
+                ></i>
 
                 <h3>
                     Maintanace
@@ -686,15 +882,17 @@
 
             <div class="expertise-card">
 
-                <i class="fa-solid fa-couch"></i>
+                <i
+                    class="fa-solid fa-couch"
+                ></i>
 
                 <h3>
                     Premium Furnitures
                 </h3>
 
                 <p>
-                    Premium Quality Self Factory made
-                    Furnitures
+                    Premium Quality Self Factory
+                    made Furnitures
                 </p>
 
             </div>
@@ -702,22 +900,26 @@
 
             <div class="expertise-card">
 
-                <i class="fa-solid fa-sheet-plastic"></i>
+                <i
+                    class="fa-solid fa-sheet-plastic"
+                ></i>
 
                 <h3>
                     Premium Raw Materials
                 </h3>
 
                 <p>
-                    Professional interior design services
-                    delivered entirely online.
+                    Professional interior design
+                    services delivered entirely online.
                 </p>
 
             </div>
 
+
         </div>
 
     </section>
+
 
 
     <!-- =====================================================
@@ -733,7 +935,9 @@
             Our Latest Work
         </h2>
 
+
         <div class="gallery">
+
 
             <div class="gallery-item">
 
@@ -794,9 +998,11 @@
 
             </div>
 
+
         </div>
 
     </section>
+
 
 
     <!-- =====================================================
@@ -812,20 +1018,24 @@
             Quality & Craftsmanship
         </h2>
 
+
         <div class="materials-container">
+
 
             <div class="material-card">
 
-                <i class="fa-solid fa-tree"></i>
+                <i
+                    class="fa-solid fa-tree"
+                ></i>
 
                 <h3>
                     Sustainable Woods
                 </h3>
 
                 <p>
-                    We source premium, eco-friendly hardwoods
-                    for furniture and structural elements
-                    that last a lifetime.
+                    We source premium, eco-friendly
+                    hardwoods for furniture and structural
+                    elements that last a lifetime.
                 </p>
 
             </div>
@@ -833,7 +1043,9 @@
 
             <div class="material-card">
 
-                <i class="fa-solid fa-gem"></i>
+                <i
+                    class="fa-solid fa-gem"
+                ></i>
 
                 <h3>
                     Luxurious Marbles
@@ -850,27 +1062,31 @@
 
             <div class="material-card">
 
-                <i class="fa-solid fa-industry"></i>
+                <i
+                    class="fa-solid fa-industry"
+                ></i>
 
                 <h3>
                     Artisanal Metals
                 </h3>
 
                 <p>
-                    Custom-forged brass, bronze, and steel
-                    elements that add a touch of bespoke
-                    elegance to any space.
+                    Custom-forged brass, bronze, and
+                    steel elements that add a touch of
+                    bespoke elegance to any space.
                 </p>
 
             </div>
+
 
         </div>
 
     </section>
 
 
+
     <!-- =====================================================
-         ABOUT / COMPANY
+         ABOUT
          ===================================================== -->
 
     <section
@@ -896,10 +1112,12 @@
             </h2>
 
             <p>
-                Founded in 2015, OPULER is a team of passionate
-                designers. We believe in creating environments
-                that reflect timeless design and fine craftsmanship.
+                Founded in 2015, OPULER is a team of
+                passionate designers. We believe in
+                creating environments that reflect
+                timeless design and fine craftsmanship.
             </p>
+
 
             <a
                 href="#"
@@ -911,6 +1129,7 @@
         </div>
 
     </section>
+
 
 
     <!-- =====================================================
@@ -926,6 +1145,7 @@
             What Our Clients Say
         </h2>
 
+
         <div class="reviews-container">
 
 
@@ -934,18 +1154,24 @@
                 <div class="stars">
 
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
 
                 </div>
 
+
                 <blockquote>
-                    "OPULER transformed our house into a dream
-                    home. Their attention to detail is unmatched.
-                    Absolutely breathtaking work!"
+                    "OPULER transformed our house into
+                    a dream home. Their attention to detail
+                    is unmatched. Absolutely breathtaking work!"
                 </blockquote>
+
 
                 <cite>
                     &mdash; Dhanwanth D.
@@ -954,23 +1180,31 @@
             </div>
 
 
+
             <div class="review-card">
 
                 <div class="stars">
 
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
 
                 </div>
 
+
                 <blockquote>
-                    "The team was professional, creative, and
-                    delivered beyond our expectations. Our new
-                    office space is both beautiful and functional."
+                    "The team was professional, creative,
+                    and delivered beyond our expectations.
+                    Our new office space is both beautiful
+                    and functional."
                 </blockquote>
+
 
                 <cite>
                     &mdash; Priya S.
@@ -979,23 +1213,30 @@
             </div>
 
 
+
             <div class="review-card">
 
                 <div class="stars">
 
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
+
                     <i class="fas fa-star"></i>
 
                 </div>
 
+
                 <blockquote>
-                    "An incredible eye for design and a pleasure
-                    to work with. They respected our budget and
-                    timeline completely."
+                    "An incredible eye for design and a
+                    pleasure to work with. They respected
+                    our budget and timeline completely."
                 </blockquote>
+
 
                 <cite>
                     &mdash; The Ambani Family
@@ -1003,9 +1244,11 @@
 
             </div>
 
+
         </div>
 
     </section>
+
 
 
     <!-- =====================================================
@@ -1021,6 +1264,7 @@
             GET FREE ESTIMATE
         </h2>
 
+
         <p class="contact-subtitle">
             Have a project in mind?
             We'd love to hear from you.
@@ -1033,6 +1277,7 @@
             method="POST"
         >
 
+
             <div class="form-group">
 
                 <input
@@ -1042,6 +1287,7 @@
                     placeholder="Your Name"
                     required
                 >
+
 
                 <input
                     type="email"
@@ -1054,6 +1300,7 @@
             </div>
 
 
+
             <div class="form-group">
 
                 <input
@@ -1064,6 +1311,7 @@
                     maxlength="10"
                     required
                 >
+
 
                 <input
                     type="tel"
@@ -1093,11 +1341,14 @@
                 Send Message
             </button>
 
+
         </form>
 
     </section>
 
+
 </main>
+
 
 
 <!-- =========================================================
@@ -1105,6 +1356,7 @@
      ========================================================= -->
 
 <footer>
+
 
     <div class="footer-container">
 
@@ -1114,11 +1366,10 @@
                 src="opular-logo.png"
                 alt="OPULER Logo"
                 class="footer-logo"
-                loading="lazy"
             >
 
             <p>
-                Designing a better, everyday.
+                Designing a better ,everyday.
             </p>
 
         </div>
@@ -1133,7 +1384,7 @@
         </h3>
 
         <p>
-            Dubai, Kerala<br>
+            Dubai,Kerala<br>
             Kollam Junction
         </p>
 
@@ -1150,31 +1401,43 @@
             Follow Us
         </h3>
 
-        <a
-            href="https://www.instagram.com/opuler_designs"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-        >
-            <i class="fab fa-instagram"></i>
-        </a>
 
         <a
             href="https://www.instagram.com/opuler_designs"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Pinterest"
         >
-            <i class="fab fa-pinterest"></i>
+
+            <i
+                class="fab fa-instagram"
+            ></i>
+
         </a>
+
 
         <a
             href="https://www.instagram.com/opuler_designs"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Facebook"
         >
-            <i class="fab fa-facebook-f"></i>
+
+            <i
+                class="fab fa-pinterest"
+            ></i>
+
+        </a>
+
+
+        <a
+            href="https://www.instagram.com/opuler_designs"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <i
+                class="fab fa-facebook-f"
+            ></i>
+
         </a>
 
     </div>
@@ -1184,8 +1447,9 @@
 
         <p>
             &copy; 2025 OPULER Interior Designs and
-            General Maintenance. All Rights Reserved.
+            General Maintenance . All Rights Reserved.
         </p>
+
 
         <a href="#">
             Privacy Policy
@@ -1193,14 +1457,17 @@
 
     </div>
 
+
 </footer>
 
 
+
 <!-- =========================================================
-     STICKY CONTACT BAR
+     STICKY CONTACT
      ========================================================= -->
 
 <div class="sticky-contact-bar">
+
 
     <a
         href="https://wa.me/9995808002"
@@ -1208,7 +1475,9 @@
         rel="noopener noreferrer"
     >
 
-        <i class="fab fa-whatsapp"></i>
+        <i
+            class="fab fa-whatsapp"
+        ></i>
 
         <span>
             WhatsApp
@@ -1219,7 +1488,9 @@
 
     <a href="#contact">
 
-        <i class="fas fa-envelope"></i>
+        <i
+            class="fas fa-envelope"
+        ></i>
 
         <span>
             Send Mail
@@ -1227,11 +1498,13 @@
 
     </a>
 
+
 </div>
 
 
+
 <!-- =========================================================
-     OPTIMIZED FRAME ENGINE
+     FRAME ANIMATION ENGINE
      ========================================================= -->
 
 <script>
@@ -1241,58 +1514,142 @@
         'use strict';
 
 
+
         /* =====================================================
            CONFIGURATION
            ===================================================== */
 
+
+        /*
+         * Number of frames in BOTH sequences.
+         */
         const TOTAL_FRAMES = 101;
 
-        const FRAME_FOLDER =
+
+        /*
+         * Breakpoint.
+         *
+         * <= 768px = mobile
+         * > 768px = desktop
+         */
+        const MOBILE_BREAKPOINT = 768;
+
+
+        /*
+         * Desktop frame directory.
+         */
+        const DESKTOP_FOLDER =
             'bg-frames/';
 
-        const FRAME_PREFIX =
+
+        /*
+         * Mobile frame directory.
+         */
+        const MOBILE_FOLDER =
+            'mbg-frames/';
+
+
+        /*
+         * Desktop filename prefix.
+         *
+         * bg-0001.webp
+         */
+        const DESKTOP_PREFIX =
             'bg-';
 
+
+        /*
+         * Mobile filename prefix.
+         *
+         * mbg-0001.webp
+         */
+        const MOBILE_PREFIX =
+            'mbg-';
+
+
+        /*
+         * File format.
+         */
         const FRAME_EXTENSION =
             '.webp';
 
 
         /*
-         * TRUE:
-         *
-         * The loading screen remains until all 101 frames
-         * have been successfully loaded AND decoded.
-         *
-         * This is what you requested.
-         */
-        const REQUIRE_ALL_FRAMES = true;
-
-
-        /*
-         * DPR limitation.
-         *
-         * This prevents unnecessarily huge canvas buffers.
+         * Desktop maximum DPR.
          */
         const DESKTOP_DPR = 1.5;
 
+
+        /*
+         * Mobile maximum DPR.
+         *
+         * Lower memory consumption.
+         */
         const MOBILE_DPR = 1.25;
 
 
         /*
-         * Frame interpolation.
+         * Frame smoothing.
          *
-         * Increase toward 0.35 for faster response.
-         *
-         * Decrease toward 0.18 for smoother movement.
+         * 0.18 = slower/smoother
+         * 0.28 = balanced
+         * 0.35 = more responsive
          */
         const SMOOTHING = 0.28;
 
 
         /*
-         * How far we search for an already available frame
-         * if something unexpected happens.
+         * Number of nearby frames searched if an exact
+         * frame isn't available.
          */
         const FALLBACK_SEARCH_RADIUS = 8;
+
+
+
+        /* =====================================================
+           DEVICE DETECTION
+           ===================================================== */
+
+        const isMobile =
+            window.innerWidth <=
+            MOBILE_BREAKPOINT;
+
+
+        /*
+         * This is the important part.
+         *
+         * Mobile:
+         * mbg-frames/
+         *
+         * Desktop:
+         * bg-frames/
+         */
+        const FRAME_FOLDER =
+            isMobile
+                ? MOBILE_FOLDER
+                : DESKTOP_FOLDER;
+
+
+        const FRAME_PREFIX =
+            isMobile
+                ? MOBILE_PREFIX
+                : DESKTOP_PREFIX;
+
+
+
+        console.log(
+            `OPULER frame mode: ${
+                isMobile
+                    ? 'MOBILE'
+                    : 'DESKTOP'
+            }`
+        );
+
+
+        console.log(
+            `Frame folder: ${FRAME_FOLDER}`
+        );
+
 
 
         /* =====================================================
@@ -1304,20 +1661,24 @@
                 'siteLoader'
             );
 
+
         const loaderPreview =
             document.getElementById(
                 'loaderPreview'
             );
+
 
         const loaderProgressBar =
             document.getElementById(
                 'loaderProgressBar'
             );
 
+
         const loaderPercent =
             document.getElementById(
                 'loaderPercent'
             );
+
 
         const loaderStatus =
             document.getElementById(
@@ -1330,10 +1691,12 @@
                 '.hero-frame-section'
             );
 
+
         const canvas =
             document.getElementById(
                 'heroCanvas'
             );
+
 
         const hint =
             document.getElementById(
@@ -1345,8 +1708,15 @@
             !hero ||
             !canvas
         ) {
+
+            console.error(
+                'Hero frame elements not found.'
+            );
+
             return;
+
         }
+
 
 
         /* =====================================================
@@ -1363,8 +1733,20 @@
             );
 
 
+        if (!ctx) {
+
+            console.error(
+                'Canvas is not supported.'
+            );
+
+            return;
+
+        }
+
+
+
         /* =====================================================
-           FRAME STORAGE
+           FRAME ARRAYS
            ===================================================== */
 
         const frames =
@@ -1372,11 +1754,17 @@
                 TOTAL_FRAMES
             );
 
+
         const framePromises =
             new Array(
                 TOTAL_FRAMES
             );
 
+
+
+        /* =====================================================
+           STATE
+           ===================================================== */
 
         let loadedFrames = 0;
 
@@ -1401,11 +1789,9 @@
         let scrollQueued = false;
 
 
-        let firstFrameReady = false;
-
 
         /* =====================================================
-           PREVENT PAGE SCROLL DURING LOADING
+           LOCK SCROLL
            ===================================================== */
 
         document.documentElement
@@ -1414,6 +1800,7 @@
                 'loader-active'
             );
 
+
         document.body
             .classList
             .add(
@@ -1421,20 +1808,15 @@
             );
 
 
+
         /* =====================================================
            DPR
            ===================================================== */
 
-        const mobileQuery =
-            window.matchMedia(
-                '(max-width: 768px)'
-            );
-
-
         function getDPR() {
 
             const maximum =
-                mobileQuery.matches
+                isMobile
                     ? MOBILE_DPR
                     : DESKTOP_DPR;
 
@@ -1447,11 +1829,19 @@
         }
 
 
+
         /* =====================================================
            FRAME URL
            ===================================================== */
 
         function frameURL(index) {
+
+            /*
+             * index 0 -> 0001
+             * index 1 -> 0002
+             *
+             * etc.
+             */
 
             const number =
                 String(
@@ -1470,6 +1860,7 @@
             );
 
         }
+
 
 
         /* =====================================================
@@ -1492,7 +1883,9 @@
                 );
 
 
-            if (loaderProgressBar) {
+            if (
+                loaderProgressBar
+            ) {
 
                 loaderProgressBar.style.width =
                     `${percentage}%`;
@@ -1500,7 +1893,9 @@
             }
 
 
-            if (loaderPercent) {
+            if (
+                loaderPercent
+            ) {
 
                 loaderPercent.textContent =
                     `${percentage}%`;
@@ -1508,7 +1903,9 @@
             }
 
 
-            if (loaderStatus) {
+            if (
+                loaderStatus
+            ) {
 
                 if (
                     failedFrames > 0
@@ -1540,6 +1937,7 @@
         }
 
 
+
         /* =====================================================
            LOAD + DECODE FRAME
            ===================================================== */
@@ -1550,23 +1948,41 @@
                 index < 0 ||
                 index >= TOTAL_FRAMES
             ) {
+
                 return null;
+
             }
 
+
+            /*
+             * Already decoded.
+             */
 
             if (
                 frames[index]
             ) {
+
                 return frames[index];
+
             }
 
+
+            /*
+             * Already loading.
+             */
 
             if (
                 framePromises[index]
             ) {
+
                 return framePromises[index];
+
             }
 
+
+            /*
+             * Start loading.
+             */
 
             framePromises[index] =
                 (async () => {
@@ -1576,14 +1992,15 @@
                         let image;
 
 
+
                         /*
-                         * Preferred method:
+                         * BEST PATH
                          *
-                         * Fetch WebP
+                         * fetch
                          * ↓
-                         * Blob
+                         * blob
                          * ↓
-                         * ImageBitmap
+                         * createImageBitmap
                          */
 
                         if (
@@ -1623,28 +2040,36 @@
 
                         }
 
-                        else {
 
-                            /*
-                             * Browser fallback.
-                             */
+                        /*
+                         * FALLBACK
+                         *
+                         * For browsers that don't support
+                         * createImageBitmap.
+                         */
+
+                        else {
 
                             image =
                                 new Image();
 
+
                             image.decoding =
                                 'async';
 
+
                             image.src =
                                 frameURL(index);
+
 
                             await image.decode();
 
                         }
 
 
+
                         /*
-                         * Frame is now actually decoded.
+                         * Store decoded frame.
                          */
 
                         frames[index] =
@@ -1657,9 +2082,9 @@
                         updateLoaderProgress();
 
 
+
                         /*
-                         * Make the first frame visible
-                         * in the loading screen.
+                         * Show first frame inside loader.
                          */
 
                         if (
@@ -1670,6 +2095,7 @@
                             loaderPreview.src =
                                 frameURL(0);
 
+
                             loaderPreview.classList
                                 .add(
                                     'loaded'
@@ -1678,17 +2104,14 @@
                         }
 
 
+
                         /*
-                         * First hero frame is ready.
+                         * Draw first hero frame.
                          */
 
                         if (
-                            index === 0 &&
-                            !firstFrameReady
+                            index === 0
                         ) {
-
-                            firstFrameReady =
-                                true;
 
                             resizeCanvas();
 
@@ -1701,6 +2124,7 @@
 
                     }
 
+
                     catch (error) {
 
                         failedFrames++;
@@ -1710,7 +2134,7 @@
 
 
                         console.error(
-                            `Failed to load ${frameURL(index)}`,
+                            `Failed: ${frameURL(index)}`,
                             error
                         );
 
@@ -1727,8 +2151,9 @@
         }
 
 
+
         /* =====================================================
-           CONTROLLED PROGRESSIVE PRELOADING
+           PRELOAD ALL FRAMES
            ===================================================== */
 
         async function preloadAllFrames() {
@@ -1737,7 +2162,7 @@
 
 
             /*
-             * Detect network speed.
+             * Network information.
              */
 
             const connection =
@@ -1752,11 +2177,15 @@
 
 
             /*
-             * Number of simultaneous frame decoders.
+             * Default workers.
              */
-
             let workers = 5;
 
+
+            /*
+             * Reduce simultaneous downloads on slower
+             * networks.
+             */
 
             if (
                 effectiveType === 'slow-2g' ||
@@ -1776,9 +2205,25 @@
             }
 
 
+
             /*
-             * Worker function.
+             * Mobile devices get slightly fewer simultaneous
+             * decodes to reduce memory/CPU pressure.
              */
+
+            if (
+                isMobile
+            ) {
+
+                workers =
+                    Math.min(
+                        workers,
+                        4
+                    );
+
+            }
+
+
 
             async function worker() {
 
@@ -1792,7 +2237,9 @@
                         index >=
                         TOTAL_FRAMES
                     ) {
+
                         return;
+
                     }
 
 
@@ -1802,8 +2249,7 @@
 
 
                     /*
-                     * Give the browser a chance
-                     * to update the loading UI.
+                     * Yield to browser.
                      */
 
                     if (
@@ -1819,6 +2265,7 @@
                 }
 
             }
+
 
 
             const jobs = [];
@@ -1844,8 +2291,9 @@
         }
 
 
+
         /* =====================================================
-           RESIZE CANVAS
+           CANVAS RESIZE
            ===================================================== */
 
         function resizeCanvas() {
@@ -1888,6 +2336,10 @@
                 );
 
 
+            /*
+             * Only resize canvas if necessary.
+             */
+
             if (
                 canvas.width !==
                     pixelWidth ||
@@ -1898,9 +2350,14 @@
                 canvas.width =
                     pixelWidth;
 
+
                 canvas.height =
                     pixelHeight;
 
+
+                /*
+                 * DPR scaling.
+                 */
 
                 ctx.setTransform(
                     dpr,
@@ -1915,6 +2372,7 @@
                 canvasWidth =
                     width;
 
+
                 canvasHeight =
                     height;
 
@@ -1923,18 +2381,22 @@
                     -1;
 
 
+                /*
+                 * Redraw current frame.
+                 */
+
+                const index =
+                    Math.round(
+                        currentFrame
+                    );
+
+
                 if (
-                    frames[
-                        Math.round(
-                            currentFrame
-                        )
-                    ]
+                    frames[index]
                 ) {
 
                     drawFrame(
-                        Math.round(
-                            currentFrame
-                        )
+                        index
                     );
 
                 }
@@ -1942,6 +2404,7 @@
             }
 
         }
+
 
 
         /* =====================================================
@@ -1955,11 +2418,24 @@
 
 
             if (
-                !image ||
-                lastDrawnFrame === index
+                !image
             ) {
 
                 return false;
+
+            }
+
+
+            /*
+             * Don't redraw the same frame.
+             */
+
+            if (
+                lastDrawnFrame ===
+                index
+            ) {
+
+                return true;
 
             }
 
@@ -1978,11 +2454,13 @@
 
             const scale =
                 Math.max(
+
                     canvasWidth /
                         imageWidth,
 
                     canvasHeight /
                         imageHeight
+
                 );
 
 
@@ -2010,6 +2488,10 @@
                 ) / 2;
 
 
+            /*
+             * Clear.
+             */
+
             ctx.clearRect(
                 0,
                 0,
@@ -2017,6 +2499,10 @@
                 canvasHeight
             );
 
+
+            /*
+             * Draw decoded ImageBitmap.
+             */
 
             ctx.drawImage(
                 image,
@@ -2036,6 +2522,7 @@
         }
 
 
+
         /* =====================================================
            FALLBACK FRAME
            ===================================================== */
@@ -2043,6 +2530,10 @@
         function drawNearestAvailable(
             index
         ) {
+
+            /*
+             * Exact frame.
+             */
 
             if (
                 frames[index]
@@ -2058,16 +2549,18 @@
 
 
             /*
-             * Search backwards and forwards
-             * for a decoded frame.
+             * Search nearby.
              */
 
             for (
                 let distance = 1;
+
                 distance <=
                     FALLBACK_SEARCH_RADIUS;
+
                 distance++
             ) {
+
 
                 const previous =
                     index -
@@ -2077,6 +2570,7 @@
                 const next =
                     index +
                     distance;
+
 
 
                 if (
@@ -2091,6 +2585,7 @@
                     return;
 
                 }
+
 
 
                 if (
@@ -2112,8 +2607,9 @@
         }
 
 
+
         /* =====================================================
-           CALCULATE FRAME FROM SCROLL
+           SCROLL -> FRAME
            ===================================================== */
 
         function calculateTargetFrame() {
@@ -2121,6 +2617,11 @@
             const rect =
                 hero.getBoundingClientRect();
 
+
+            /*
+             * How much scroll is available
+             * inside the hero section.
+             */
 
             const scrollDistance =
                 hero.offsetHeight -
@@ -2141,6 +2642,10 @@
                 scrollDistance;
 
 
+            /*
+             * Clamp 0 -> 1.
+             */
+
             progress =
                 Math.max(
                     0,
@@ -2150,6 +2655,10 @@
                     )
                 );
 
+
+            /*
+             * 0 -> 100.
+             */
 
             return Math.round(
                 progress *
@@ -2161,8 +2670,9 @@
         }
 
 
+
         /* =====================================================
-           SMOOTH FRAME RENDERING
+           FRAME RENDER LOOP
            ===================================================== */
 
         function renderLoop() {
@@ -2171,6 +2681,10 @@
                 targetFrame -
                 currentFrame;
 
+
+            /*
+             * Close enough.
+             */
 
             if (
                 Math.abs(
@@ -2183,6 +2697,11 @@
 
             }
 
+
+            /*
+             * Smoothly approach target.
+             */
+
             else {
 
                 currentFrame +=
@@ -2194,15 +2713,19 @@
 
             const frameIndex =
                 Math.max(
+
                     0,
 
                     Math.min(
+
                         TOTAL_FRAMES - 1,
 
                         Math.round(
                             currentFrame
                         )
+
                     )
+
                 );
 
 
@@ -2210,6 +2733,10 @@
                 frameIndex
             );
 
+
+            /*
+             * Continue until target is reached.
+             */
 
             if (
                 Math.abs(
@@ -2224,6 +2751,7 @@
 
             }
 
+
             else {
 
                 renderRunning =
@@ -2234,8 +2762,9 @@
         }
 
 
+
         /* =====================================================
-           SCROLL UPDATE
+           SCROLL HANDLER
            ===================================================== */
 
         function handleScroll() {
@@ -2244,12 +2773,14 @@
                 calculateTargetFrame();
 
 
+
             /*
-             * Hide SCROLL indicator after
-             * user begins scrolling.
+             * Hide scroll indicator.
              */
 
-            if (hint) {
+            if (
+                hint
+            ) {
 
                 const rect =
                     hero.getBoundingClientRect();
@@ -2260,26 +2791,42 @@
                     window.innerHeight;
 
 
-                const progress =
+                let progress = 0;
+
+
+                if (
+                    distance > 0
+                ) {
+
+                    progress =
+                        -rect.top /
+                        distance;
+
+                }
+
+
+                progress =
                     Math.max(
                         0,
-
                         Math.min(
                             1,
-
-                            -rect.top /
-                            distance
+                            progress
                         )
                     );
 
 
                 hint.style.opacity =
-                    progress > 0.025
+                    progress > .025
                         ? '0'
                         : '.9';
 
             }
 
+
+
+            /*
+             * Start rendering.
+             */
 
             if (
                 !renderRunning
@@ -2287,6 +2834,7 @@
 
                 renderRunning =
                     true;
+
 
                 requestAnimationFrame(
                     renderLoop
@@ -2301,12 +2849,19 @@
         }
 
 
+
+        /*
+         * Throttled scroll listener.
+         */
+
         function onScroll() {
 
             if (
                 scrollQueued
             ) {
+
                 return;
+
             }
 
 
@@ -2321,6 +2876,86 @@
         }
 
 
+
+        /* =====================================================
+           RETRY FAILED FRAMES
+           ===================================================== */
+
+        async function retryFailedFrames() {
+
+            /*
+             * Get indexes that don't exist.
+             */
+
+            const missing = [];
+
+
+            for (
+                let i = 0;
+                i < TOTAL_FRAMES;
+                i++
+            ) {
+
+                if (
+                    !frames[i]
+                ) {
+
+                    missing.push(
+                        i
+                    );
+
+                }
+
+            }
+
+
+            if (
+                missing.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            console.log(
+                'Retrying missing frames:',
+                missing.length
+            );
+
+
+            /*
+             * Reset promises for missing frames.
+             */
+
+            for (
+                const index of missing
+            ) {
+
+                framePromises[index] =
+                    null;
+
+            }
+
+
+            /*
+             * Retry sequentially.
+             */
+
+            for (
+                const index of missing
+            ) {
+
+                await loadFrame(
+                    index
+                );
+
+            }
+
+        }
+
+
+
         /* =====================================================
            START EXPERIENCE
            ===================================================== */
@@ -2328,75 +2963,73 @@
         async function startExperience() {
 
             /*
-             * Load all 101 frames.
+             * Load all frames.
              */
 
             await preloadAllFrames();
 
 
             /*
-             * Retry failed frames.
+             * Retry anything that failed.
              */
 
-            if (
-                failedFrames > 0
+            await retryFailedFrames();
+
+
+            /*
+             * Check if everything is ready.
+             */
+
+            let allReady = true;
+
+
+            for (
+                let i = 0;
+                i < TOTAL_FRAMES;
+                i++
             ) {
 
-                if (loaderStatus) {
-
-                    loaderStatus.textContent =
-                        'Verifying frames...';
-
-                }
-
-
-                /*
-                 * Reset failure count for retry.
-                 */
-
-                failedFrames = 0;
-
-
-                for (
-                    let i = 0;
-                    i < TOTAL_FRAMES;
-                    i++
+                if (
+                    !frames[i]
                 ) {
 
-                    if (
-                        !frames[i]
-                    ) {
+                    allReady = false;
 
-                        await loadFrame(
-                            i
-                        );
-
-                    }
+                    break;
 
                 }
 
             }
 
 
-            /*
-             * If every frame exists,
-             * unlock the website.
-             */
+
+            /* =================================================
+               SUCCESS
+               ================================================= */
 
             if (
-                loadedFrames ===
-                TOTAL_FRAMES
+                allReady
             ) {
 
+                console.log(
+                    'All OPULER frames decoded successfully.'
+                );
+
+
                 /*
-                 * Make sure frame 1 is displayed.
+                 * Resize canvas.
                  */
 
                 resizeCanvas();
 
 
+                /*
+                 * Start on frame 1.
+                 */
+
                 currentFrame =
                     0;
+
 
                 targetFrame =
                     0;
@@ -2404,6 +3037,10 @@
 
                 drawFrame(0);
 
+
+                /*
+                 * Loader = 100%.
+                 */
 
                 if (
                     loaderProgressBar
@@ -2436,7 +3073,7 @@
 
 
                 /*
-                 * Allow the final frame to paint.
+                 * Allow browser to paint frame 1.
                  */
 
                 await new Promise(
@@ -2464,7 +3101,7 @@
 
 
                 /*
-                 * Unlock page scrolling.
+                 * Unlock scrolling.
                  */
 
                 document.documentElement
@@ -2482,7 +3119,7 @@
 
 
                 /*
-                 * Remove loader after transition.
+                 * Remove loader after fade.
                  */
 
                 setTimeout(
@@ -2502,8 +3139,8 @@
 
 
                 /*
-                 * Start at the actual
-                 * current scroll position.
+                 * Synchronize with current
+                 * scroll position.
                  */
 
                 targetFrame =
@@ -2520,24 +3157,39 @@
 
             }
 
+
+
+            /* =================================================
+               FAILURE
+               ================================================= */
+
             else {
 
-                /*
-                 * Don't expose a broken hero.
-                 */
+                console.error(
+                    'Some frame files are missing.'
+                );
+
 
                 if (
                     loaderStatus
                 ) {
 
                     loaderStatus.textContent =
-                        `Unable to load all frames (${loadedFrames}/${TOTAL_FRAMES}). Check the bg-frames folder.`;
+                        `Unable to load all frames. Loaded ${loadedFrames}/${TOTAL_FRAMES}.`;
 
                 }
+
+                /*
+                 * IMPORTANT:
+                 *
+                 * The website remains locked instead of
+                 * showing a black/broken hero.
+                 */
 
             }
 
         }
+
 
 
         /* =====================================================
@@ -2550,7 +3202,11 @@
 
             const resizeObserver =
                 new ResizeObserver(
-                    resizeCanvas
+                    () => {
+
+                        resizeCanvas();
+
+                    }
                 );
 
 
@@ -2559,6 +3215,7 @@
             );
 
         }
+
 
         else {
 
@@ -2573,8 +3230,9 @@
         }
 
 
+
         /* =====================================================
-           SCROLL LISTENER
+           SCROLL
            ===================================================== */
 
         window.addEventListener(
@@ -2584,6 +3242,7 @@
                 passive: true
             }
         );
+
 
 
         /* =====================================================
@@ -2621,6 +3280,7 @@
         }
 
 
+
         /* =====================================================
            INITIALIZE
            ===================================================== */
@@ -2628,12 +3288,17 @@
         resizeCanvas();
 
 
+        /*
+         * Start loading.
+         */
+
         startExperience();
+
 
     })();
 
 </script>
-
+```
 
 </body>
 
