@@ -3,68 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
     <title>OPULER | Interior Designs and General Maintenance</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        /* --- Styles for Sticky Contact Bar --- */
-        .sticky-contact-bar {
-            position: fixed;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            z-index: 1000; /* Ensures it stays on top of other content */
-        }
-
-        .sticky-contact-bar a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 80px; /* Width of the button */
-            height: 80px; /* Height of the button */
-            padding: 5px;
-            color: #000;
-            background-color: #c5a47e; /* Purple color like the reference */
-            text-decoration: none;
-            font-size: 12px;
-            font-family: Arial, sans-serif;
-            transition: background-color 0.3s ease;
-            box-shadow: -2px 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .sticky-contact-bar a:first-child {
-            border-top-left-radius: 10px;
-        }
-
-        .sticky-contact-bar a:last-child {
-            margin-top: 2px; /* Small gap between buttons */
-            border-bottom-left-radius: 10px;
-        }
-
-        .sticky-contact-bar a:hover {
-            background-color: #d4b89a; /* Darker purple on hover */
-        }
-
-        .sticky-contact-bar a i {
-            font-size: 28px; /* Icon size */
-            margin-bottom: 5px;
-        }
-    </style>
 
     <style>
         /* =========================================================
-           SCROLL-CONTROLLED HERO FRAME SEQUENCE
-           Frames: bg-frames/bg-0001.png ... bg-frames/bg-0101.png
+           OPULER SCROLL-CONTROLLED HERO
+           WebP sequence:
+           bg-frames/bg-0001.webp ... bg-frames/bg-0101.webp
            ========================================================= */
 
         .hero-frame-section {
             position: relative;
-            height: 500vh; /* 101 frames get approximately 5 viewport heights */
+            height: 500vh;
             margin: 0;
             padding: 0;
+            background: #000;
         }
 
         .hero-frame-sticky {
@@ -72,21 +28,21 @@
             top: 0;
             width: 100%;
             height: 100vh;
-            min-height: 600px;
+            height: 100svh;
+            min-height: 500px;
             overflow: hidden;
             background: #000;
+            isolation: isolate;
+            contain: layout paint;
         }
 
-        .hero-frame {
+        .hero-frame-canvas {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            object-position: center;
             display: block;
-            user-select: none;
-            -webkit-user-drag: none;
+            background: #000;
         }
 
         .hero-frame-overlay {
@@ -96,9 +52,9 @@
             pointer-events: none;
             background: linear-gradient(
                 to bottom,
-                rgba(0,0,0,.20),
-                rgba(0,0,0,.08) 45%,
-                rgba(0,0,0,.55)
+                rgba(0,0,0,.16),
+                rgba(0,0,0,.04) 45%,
+                rgba(0,0,0,.52)
             );
         }
 
@@ -133,7 +89,8 @@
             font-size: 11px;
             letter-spacing: 3px;
             opacity: .9;
-            transition: opacity .3s ease;
+            pointer-events: none;
+            transition: opacity .25s ease;
         }
 
         .hero-scroll-hint i {
@@ -145,24 +102,54 @@
             50% { transform: translateY(7px); }
         }
 
-        /* Prevent the hero text from blocking the frame interaction. */
-        .hero-frame-section .hero-content,
-        .hero-scroll-hint {
+        .hero-loading {
+            position: absolute;
+            z-index: 10;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: min(260px, 70vw);
+            color: #fff;
+            text-align: center;
+            transition: opacity .35s ease, visibility .35s ease;
             pointer-events: none;
         }
 
-        .hero-frame-section .hero-content a {
-            pointer-events: auto;
+        .hero-loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .hero-loading-text {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .hero-loading-track {
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,.25);
+            overflow: hidden;
+        }
+
+        .hero-loading-bar {
+            width: 0%;
+            height: 100%;
+            background: #fff;
+            transition: width .1s linear;
         }
 
         @media (max-width: 768px) {
             .hero-frame-section {
-                height: 420vh;
+                height: 450vh;
             }
 
             .hero-frame-sticky {
-                min-height: 100svh;
                 height: 100svh;
+                min-height: 500px;
             }
 
             .hero-frame-section .hero-content {
@@ -178,7 +165,6 @@
             }
         }
     </style>
-
 </head>
 <body>
 
@@ -202,15 +188,13 @@
     </header>
 
     <main>
-        <!-- SCROLL-CONTROLLED HERO -->
+        <!-- =====================================================
+             SCROLL-CONTROLLED HERO
+             The canvas displays bg-0001.webp -> bg-0101.webp.
+             ===================================================== -->
         <section id="home" class="hero-frame-section">
             <div class="hero-frame-sticky">
-                <img
-                    id="heroFrame"
-                    class="hero-frame"
-                    src="C:\Users\hp\Downloads\bg-frames\bg-0001.png"
-                    alt="OPULER interior design"
-                >
+                <canvas id="heroCanvas" class="hero-frame-canvas"></canvas>
 
                 <div class="hero-frame-overlay"></div>
 
@@ -221,9 +205,16 @@
                     <a href="Furnitures.html" class="cta-button">Check Our Furnitures</a>
                 </div>
 
-                <div class="hero-scroll-hint" id="heroScrollHint">
+                <div class="hero-scroll-hint" id="heroScrollHint" aria-hidden="true">
                     <span>SCROLL</span>
                     <i class="fa-solid fa-chevron-down"></i>
+                </div>
+
+                <div class="hero-loading" id="heroLoading" aria-hidden="true">
+                    <span class="hero-loading-text" id="heroLoadingText">Loading</span>
+                    <div class="hero-loading-track">
+                        <div class="hero-loading-bar" id="heroLoadingBar"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -291,33 +282,15 @@
             </div>
             <div class="founder-text">
                 <h2>Our Company</h2>
-                <p>Founded in 2015, OPULER is a team of passionate designers. We believe in creating environments that reflect timeless design and fine craftsmanship.</p>
-                <a href="#" class="cta-button">Learn More About Us</a>
+                <p>Founded in 2015, OPULER is a team of passionate designers.</p>
             </div>
         </section>
 
-        <section id="reviews" class="reviews">
+        <section class="reviews">
             <h2>What Our Clients Say</h2>
-            <div class="reviews-container">
+            <div class="review-container">
                 <div class="review-card">
-                    <div class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <blockquote>"OPULER transformed our house into a dream home. Their attention to detail is unmatched. Absolutely breathtaking work!"</blockquote>
-                    <cite>&mdash; Dhanwanth D.</cite>
-                </div>
-                <div class="review-card">
-                    <div class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <blockquote>"The team was professional, creative, and delivered beyond our expectations. Our new office space is both beautiful and functional."</blockquote>
-                    <cite>&mdash; Priya S.</cite>
-                </div>
-                <div class="review-card">
-                    <div class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <blockquote>"An incredible eye for design and a pleasure to work with. They respected our budget and timeline completely."</blockquote>
+                    <blockquote>"OPULER transformed our house into a true home. The attention to detail and quality were exceptional."</blockquote>
                     <cite>&mdash; The Ambani Family</cite>
                 </div>
             </div>
@@ -331,21 +304,9 @@
                     <input type="text" id="name" name="name" placeholder="Your Name" required>
                     <input type="email" id="email" name="email" placeholder="Your Email" required>
                 </div>
-                 <div class="form-group">
-                    <input
-    type="tel"
-    placeholder="Contact Number 1"
-    pattern="[0-9]{10}"
-    maxlength="10"
-    required
->
-                    <input
-    type="tel"
-    placeholder="Contact Number 2"
-    pattern="[0-9]{10}"
-    maxlength="10"
-    required
->
+                <div class="form-group">
+                    <input type="tel" name="contact1" placeholder="Contact Number 1" pattern="[0-9]{10}" maxlength="10" required>
+                    <input type="tel" name="contact2" placeholder="Contact Number 2" pattern="[0-9]{10}" maxlength="10" required>
                 </div>
                 <textarea name="message" id="message" rows="6" placeholder="Tell us about your project..." required></textarea>
                 <button type="submit" class="cta-button">Send Message</button>
@@ -371,7 +332,6 @@
             <a href="https://www.instagram.com/opuler_designs"><i class="fab fa-pinterest"></i></a>
             <a href="https://www.instagram.com/opuler_designs"><i class="fab fa-facebook-f"></i></a>
         </div>
-        </div>
         <div class="footer-bottom">
             <p>&copy; 2025 OPULER Interior Designs and General Maintenance . All Rights Reserved.</p>
             <a href="#">Privacy Policy</a>
@@ -388,105 +348,460 @@
             <span>Send Mail</span>
         </a>
     </div>
+
     <script>
-        // =========================================================
-        // OPULER SCROLL-CONTROLLED HERO
-        // bg-0001.png -> bg-0101.png
-        // =========================================================
+        (() => {
+            'use strict';
 
-        const heroSection = document.querySelector('.hero-frame-section');
-        const heroFrame = document.getElementById('heroFrame');
-        const heroScrollHint = document.getElementById('heroScrollHint');
+            /* =====================================================
+               PERFORMANCE SETTINGS
+               ===================================================== */
+            const TOTAL_FRAMES = 101;
+            const FRAME_FOLDER = 'bg-frames/';
+            const FRAME_PREFIX = 'bg-';
+            const FRAME_EXTENSION = '.webp';
 
-        const TOTAL_FRAMES = 101;
-        const FRAME_PATH = 'bg-frames/bg-';
-        const FRAME_DIGITS = 4;
+            /*
+             * The hero remains visible for this many viewport heights.
+             * Increase for slower animation, decrease for faster animation.
+             */
+            const HERO_SCROLL_HEIGHT_DESKTOP = 500;
+            const HERO_SCROLL_HEIGHT_MOBILE = 450;
 
-        let frames = [];
-        let currentFrame = 0;
-        let ticking = false;
+            /*
+             * Only decode a limited number of frames at once.
+             * Decoding all 101 frames to RGBA can consume hundreds of MB.
+             */
+            const MAX_DECODED_DESKTOP = 18;
+            const MAX_DECODED_MOBILE = 10;
 
-        // Preload all 101 images so scrolling stays smooth.
-        function preloadFrames() {
-            const loaded = [];
+            /* Frames loaded around the current target first. */
+            const PRIORITY_RADIUS_DESKTOP = 8;
+            const PRIORITY_RADIUS_MOBILE = 5;
 
-            for (let i = 1; i <= TOTAL_FRAMES; i++) {
-                const image = new Image();
-                const frameNumber = String(i).padStart(FRAME_DIGITS, '0');
+            /*
+             * Cap the canvas backing resolution.
+             * 1.5 is enough for most desktop hero animations and is lighter
+             * than rendering a full-screen 3x/4x DPR canvas.
+             */
+            const MAX_DPR_DESKTOP = 1.5;
+            const MAX_DPR_MOBILE = 1.25;
 
-                image.src = `${FRAME_PATH}${frameNumber}.png`;
+            /* Smoothness. Higher = more responsive, lower = more inertia. */
+            const FRAME_SMOOTHING = 0.28;
 
-                image.onload = () => {
-                    loaded[i - 1] = image;
+            const hero = document.querySelector('.hero-frame-section');
+            const canvas = document.getElementById('heroCanvas');
+            const hint = document.getElementById('heroScrollHint');
+            const loading = document.getElementById('heroLoading');
+            const loadingBar = document.getElementById('heroLoadingBar');
+            const loadingText = document.getElementById('heroLoadingText');
 
-                    // Display the first frame as soon as it is ready.
-                    if (i === 1) {
-                        heroFrame.src = image.src;
-                    }
-                };
+            if (!hero || !canvas) return;
 
-                image.onerror = () => {
-                    console.warn(`Could not load frame: ${image.src}`);
-                };
-            }
-
-            frames = loaded;
-        }
-
-        function updateHeroFrame() {
-            if (!heroSection) return;
-
-            const rect = heroSection.getBoundingClientRect();
-            const maxScroll = heroSection.offsetHeight - window.innerHeight;
-
-            // 0 at the start of the hero, 1 at the end of the sticky hero.
-            const progress = Math.min(
-                1,
-                Math.max(0, -rect.top / maxScroll)
-            );
-
-            // Convert scroll progress into frame number 0 -> 100.
-            const frameIndex = Math.min(
-                TOTAL_FRAMES - 1,
-                Math.floor(progress * (TOTAL_FRAMES - 1))
-            );
-
-            if (frameIndex !== currentFrame && frames[frameIndex]) {
-                currentFrame = frameIndex;
-                heroFrame.src = frames[frameIndex].src;
-            }
-
-            // Hide the scroll hint after scrolling starts.
-            if (heroScrollHint) {
-                heroScrollHint.style.opacity = progress > 0.03 ? '0' : '0.9';
-            }
-
-            ticking = false;
-        }
-
-        function requestFrameUpdate() {
-            if (!ticking) {
-                window.requestAnimationFrame(updateHeroFrame);
-                ticking = true;
-            }
-        }
-
-        window.addEventListener('scroll', requestFrameUpdate, { passive: true });
-        window.addEventListener('resize', requestFrameUpdate);
-
-        // Existing mobile menu.
-        const menuToggle = document.getElementById('menu-toggle');
-        const navLinks = document.getElementById('nav-links');
-
-        if (menuToggle && navLinks) {
-            menuToggle.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
+            const ctx = canvas.getContext('2d', {
+                alpha: false,
+                desynchronized: true
             });
-        }
 
-        // Start loading frames.
-        preloadFrames();
-        updateHeroFrame();
+            /*
+             * Cache entries contain decoded ImageBitmap/Image objects.
+             * The cache is intentionally bounded to avoid RAM spikes.
+             */
+            const cache = new Map();
+            const loadingPromises = new Map();
+
+            let cssWidth = 1;
+            let cssHeight = 1;
+            let currentFrame = 0;
+            let targetFrame = 0;
+            let lastDrawnFrame = -1;
+            let renderRAF = 0;
+            let scrollRAF = 0;
+            let loadedCount = 0;
+            let totalLoadStarted = 0;
+            let firstFrameReady = false;
+            let lastScrollDirection = 1;
+
+            function isMobile() {
+                return window.matchMedia('(max-width: 768px)').matches;
+            }
+
+            function maxCacheSize() {
+                return isMobile()
+                    ? MAX_DECODED_MOBILE
+                    : MAX_DECODED_DESKTOP;
+            }
+
+            function priorityRadius() {
+                return isMobile()
+                    ? PRIORITY_RADIUS_MOBILE
+                    : PRIORITY_RADIUS_DESKTOP;
+            }
+
+            function maxDPR() {
+                return isMobile()
+                    ? MAX_DPR_MOBILE
+                    : MAX_DPR_DESKTOP;
+            }
+
+            function frameURL(index) {
+                const number = String(index + 1).padStart(4, '0');
+                return `${FRAME_FOLDER}${FRAME_PREFIX}${number}${FRAME_EXTENSION}`;
+            }
+
+            function updateLoadingUI() {
+                if (!loadingBar) return;
+
+                /* Progress represents frames decoded into the browser cache. */
+                const percent = Math.round(
+                    Math.min(100, (loadedCount / TOTAL_FRAMES) * 100)
+                );
+
+                loadingBar.style.width = `${percent}%`;
+
+                if (loadingText) {
+                    loadingText.textContent =
+                        `Loading ${percent}%`;
+                }
+            }
+
+            function touchCache(index, image) {
+                if (!image) return;
+
+                /* Refresh insertion order = most recently used. */
+                if (cache.has(index)) cache.delete(index);
+                cache.set(index, image);
+
+                trimCache();
+            }
+
+            function closeFrame(image) {
+                /* ImageBitmap exposes close(); HTMLImageElement does not. */
+                if (image && typeof image.close === 'function') {
+                    try { image.close(); } catch (_) {}
+                }
+            }
+
+            function trimCache() {
+                const limit = maxCacheSize();
+
+                /* Never evict the currently displayed/target frame. */
+                const protectedFrames = new Set([
+                    Math.round(currentFrame),
+                    Math.round(targetFrame)
+                ]);
+
+                while (cache.size > limit) {
+                    let evicted = false;
+
+                    for (const [index, image] of cache) {
+                        if (!protectedFrames.has(index)) {
+                            cache.delete(index);
+                            closeFrame(image);
+                            evicted = true;
+                            break;
+                        }
+                    }
+
+                    if (!evicted) break;
+                }
+            }
+
+            async function loadFrame(index) {
+                if (index < 0 || index >= TOTAL_FRAMES) return null;
+
+                const cached = cache.get(index);
+                if (cached) {
+                    touchCache(index, cached);
+                    return cached;
+                }
+
+                if (loadingPromises.has(index)) {
+                    return loadingPromises.get(index);
+                }
+
+                totalLoadStarted++;
+
+                const promise = (async () => {
+                    try {
+                        let image;
+
+                        if ('createImageBitmap' in window) {
+                            const response = await fetch(frameURL(index), {
+                                cache: 'force-cache'
+                            });
+
+                            if (!response.ok) {
+                                throw new Error(`HTTP ${response.status}`);
+                            }
+
+                            const blob = await response.blob();
+                            image = await createImageBitmap(blob);
+                        } else {
+                            image = new Image();
+                            image.decoding = 'async';
+                            image.src = frameURL(index);
+                            await image.decode();
+                        }
+
+                        touchCache(index, image);
+                        loadedCount++;
+                        updateLoadingUI();
+
+                        if (index === 0 && !firstFrameReady) {
+                            firstFrameReady = true;
+                            resizeCanvas();
+                            drawFrame(0);
+
+                            if (loading) {
+                                loading.classList.add('hidden');
+                            }
+                        }
+
+                        return image;
+                    } catch (error) {
+                        console.warn(`Could not load ${frameURL(index)}`, error);
+                        return null;
+                    } finally {
+                        loadingPromises.delete(index);
+                    }
+                })();
+
+                loadingPromises.set(index, promise);
+                return promise;
+            }
+
+            function drawFrame(index) {
+                const image = cache.get(index);
+                if (!image) return false;
+
+                if (index === lastDrawnFrame) return true;
+
+                const scale = Math.max(
+                    cssWidth / image.width,
+                    cssHeight / image.height
+                );
+
+                const width = image.width * scale;
+                const height = image.height * scale;
+                const x = (cssWidth - width) * 0.5;
+                const y = (cssHeight - height) * 0.5;
+
+                ctx.clearRect(0, 0, cssWidth, cssHeight);
+                ctx.drawImage(image, x, y, width, height);
+
+                lastDrawnFrame = index;
+                touchCache(index, image);
+                return true;
+            }
+
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                const width = Math.max(1, Math.round(rect.width));
+                const height = Math.max(1, Math.round(rect.height));
+                const dpr = Math.min(window.devicePixelRatio || 1, maxDPR());
+
+                const pixelWidth = Math.max(1, Math.round(width * dpr));
+                const pixelHeight = Math.max(1, Math.round(height * dpr));
+
+                if (
+                    canvas.width !== pixelWidth ||
+                    canvas.height !== pixelHeight
+                ) {
+                    canvas.width = pixelWidth;
+                    canvas.height = pixelHeight;
+
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                    cssWidth = width;
+                    cssHeight = height;
+                    lastDrawnFrame = -1;
+
+                    const nearest = Math.round(currentFrame);
+                    if (cache.has(nearest)) {
+                        drawFrame(nearest);
+                    } else if (cache.has(0)) {
+                        drawFrame(0);
+                    }
+                } else {
+                    cssWidth = width;
+                    cssHeight = height;
+                }
+            }
+
+            function getScrollProgress() {
+                const rect = hero.getBoundingClientRect();
+                const distance = hero.offsetHeight - window.innerHeight;
+
+                if (distance <= 0) return 0;
+
+                return Math.max(0, Math.min(1, -rect.top / distance));
+            }
+
+            function getTargetFrame() {
+                return Math.round(
+                    getScrollProgress() * (TOTAL_FRAMES - 1)
+                );
+            }
+
+            function prioritizeAround(center) {
+                const radius = priorityRadius();
+
+                /* Always request target first. */
+                loadFrame(center);
+
+                /* Load in scroll direction first. */
+                for (let distance = 1; distance <= radius; distance++) {
+                    const first = center + distance * lastScrollDirection;
+                    const second = center - distance * lastScrollDirection;
+
+                    if (first >= 0 && first < TOTAL_FRAMES) {
+                        loadFrame(first);
+                    }
+
+                    if (second >= 0 && second < TOTAL_FRAMES) {
+                        loadFrame(second);
+                    }
+                }
+            }
+
+            function renderLoop() {
+                const delta = targetFrame - currentFrame;
+
+                if (Math.abs(delta) < 0.03) {
+                    currentFrame = targetFrame;
+                } else {
+                    currentFrame += delta * FRAME_SMOOTHING;
+                }
+
+                const frameIndex = Math.max(
+                    0,
+                    Math.min(TOTAL_FRAMES - 1, Math.round(currentFrame))
+                );
+
+                if (!drawFrame(frameIndex)) {
+                    /*
+                     * If the requested frame is still decoding, find the
+                     * closest decoded frame. This prevents a blank canvas.
+                     */
+                    let fallback = frameIndex;
+                    let found = false;
+
+                    for (let distance = 1; distance <= 10; distance++) {
+                        const forward = frameIndex + distance;
+                        const backward = frameIndex - distance;
+
+                        if (forward < TOTAL_FRAMES && cache.has(forward)) {
+                            fallback = forward;
+                            found = true;
+                            break;
+                        }
+
+                        if (backward >= 0 && cache.has(backward)) {
+                            fallback = backward;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (found) drawFrame(fallback);
+                }
+
+                trimCache();
+
+                if (Math.abs(targetFrame - currentFrame) > 0.03) {
+                    renderRAF = requestAnimationFrame(renderLoop);
+                } else {
+                    renderRAF = 0;
+                }
+            }
+
+            function updateFromScroll() {
+                const nextTarget = getTargetFrame();
+
+                if (nextTarget !== targetFrame) {
+                    if (nextTarget > targetFrame) lastScrollDirection = 1;
+                    if (nextTarget < targetFrame) lastScrollDirection = -1;
+
+                    targetFrame = nextTarget;
+                    prioritizeAround(targetFrame);
+                }
+
+                if (hint) {
+                    const progress = getScrollProgress();
+                    hint.style.opacity = progress > 0.025 ? '0' : '.9';
+                }
+
+                if (!renderRAF) {
+                    renderRAF = requestAnimationFrame(renderLoop);
+                }
+
+                scrollRAF = 0;
+            }
+
+            function onScroll() {
+                if (scrollRAF) return;
+                scrollRAF = requestAnimationFrame(updateFromScroll);
+            }
+
+            async function preloadInitialFrames() {
+                /* First frame is the only blocking frame. */
+                await loadFrame(0);
+
+                /* Let the browser paint before more decoding begins. */
+                await new Promise(requestAnimationFrame);
+
+                /* Load a small initial neighborhood. */
+                const initialRadius = priorityRadius();
+                for (let i = 1; i <= initialRadius && i < TOTAL_FRAMES; i++) {
+                    await loadFrame(i);
+                }
+
+                /*
+                 * Continue loading the complete sequence slowly in the
+                 * background. If the user scrolls, priority loads above
+                 * can reuse the same promises.
+                 */
+                for (let index = initialRadius + 1; index < TOTAL_FRAMES; index++) {
+                    if (!loadingPromises.has(index) && !cache.has(index)) {
+                        await loadFrame(index);
+                    }
+
+                    /* Yield every frame to keep scrolling/input responsive. */
+                    await new Promise(requestAnimationFrame);
+                }
+            }
+
+            /* Existing mobile navigation. */
+            const menuToggle = document.getElementById('menu-toggle');
+            const navLinks = document.getElementById('nav-links');
+
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            /* ResizeObserver avoids unnecessary resize work. */
+            const resizeObserver = new ResizeObserver(() => {
+                resizeCanvas();
+            });
+            resizeObserver.observe(canvas);
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+
+            /* Handle orientation / viewport changes. */
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                trimCache();
+            }, { passive: true });
+
+            /* Start. */
+            resizeCanvas();
+            preloadInitialFrames();
+
+        })();
     </script>
 
 </body>
