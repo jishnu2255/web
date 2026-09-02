@@ -510,6 +510,23 @@
 
     }
 
+    
+.contact-form button[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    margin: 20px auto 0;
+
+    padding: 15px 30px;
+
+    line-height: normal;
+
+    vertical-align: middle;
+}
+
 
 
     /* =========================================================
@@ -570,6 +587,7 @@
         }
 
     }
+    
 
 
 
@@ -1336,9 +1354,9 @@
 
             <button
                 type="submit"
-                class="cta-button"
+                class="cta-button1"
             >
-                Send Message
+              <center> Send Message</center> 
             </button>
 
 
@@ -1504,1799 +1522,366 @@
 
 
 <!-- =========================================================
-     FRAME ANIMATION ENGINE
+     FRAME ANIMATION ENGINE — MOBILE SAFE VERSION
      ========================================================= -->
-
 <script>
+(() => {
+    'use strict';
 
-    (() => {
+    const TOTAL_FRAMES = 101;
+    const MOBILE_BREAKPOINT = 768;
 
-        'use strict';
+    const isMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
 
+    /* Preferred source is mobile on mobile and desktop on desktop.
+       Fallback sources prevent a permanent black/locked screen if
+       the mobile folder was not deployed correctly. */
+    const sources = isMobile
+        ? [
+            { folder: 'mbg-frames/', prefix: 'mbg-' },
+            { folder: 'bg-frames/',  prefix: 'bg-'  }
+          ]
+        : [
+            { folder: 'bg-frames/',  prefix: 'bg-'  },
+            { folder: 'mbg-frames/', prefix: 'mbg-' }
+          ];
 
+    const extensions = ['.webp', '.png'];
 
-        /* =====================================================
-           CONFIGURATION
-           ===================================================== */
+    const MOBILE_DPR = 1.15;
+    const DESKTOP_DPR = 1.5;
+    const SMOOTHING = isMobile ? 0.34 : 0.28;
 
+    const loader = document.getElementById('siteLoader');
+    const loaderProgressBar = document.getElementById('loaderProgressBar');
+    const loaderPercent = document.getElementById('loaderPercent');
+    const loaderStatus = document.getElementById('loaderStatus');
+    const hero = document.querySelector('.hero-frame-section');
+    const canvas = document.getElementById('heroCanvas');
+    const hint = document.getElementById('heroScrollHint');
 
-        /*
-         * Number of frames in BOTH sequences.
-         */
-        const TOTAL_FRAMES = 101;
+    if (!hero || !canvas) return;
 
+    const ctx = canvas.getContext('2d', {
+        alpha: false,
+        desynchronized: true
+    });
 
-        /*
-         * Breakpoint.
-         *
-         * <= 768px = mobile
-         * > 768px = desktop
-         */
-        const MOBILE_BREAKPOINT = 768;
+    if (!ctx) return;
 
+    const frames = new Array(TOTAL_FRAMES);
+    const promises = new Array(TOTAL_FRAMES);
 
-        /*
-         * Desktop frame directory.
-         */
-        const DESKTOP_FOLDER =
-            'bg-frames/';
+    let loaded = 0;
+    let currentFrame = 0;
+    let targetFrame = 0;
+    let lastDrawn = -1;
+    let renderRunning = false;
+    let scrollQueued = false;
+    let canvasWidth = 1;
+    let canvasHeight = 1;
+    let selectedSource = null;
+    let selectedExtension = null;
 
+    document.documentElement.classList.add('loader-active');
+    document.body.classList.add('loader-active');
 
-        /*
-         * Mobile frame directory.
-         */
-        const MOBILE_FOLDER =
-            'mbg-frames/';
-
-
-        /*
-         * Desktop filename prefix.
-         *
-         * bg-0001.webp
-         */
-        const DESKTOP_PREFIX =
-            'bg-';
-
-
-        /*
-         * Mobile filename prefix.
-         *
-         * mbg-0001.webp
-         */
-        const MOBILE_PREFIX =
-            'mbg-';
-
-
-        /*
-         * File format.
-         */
-        const FRAME_EXTENSION =
-            '.webp';
-
-
-        /*
-         * Desktop maximum DPR.
-         */
-        const DESKTOP_DPR = 1.5;
-
-
-        /*
-         * Mobile maximum DPR.
-         *
-         * Lower memory consumption.
-         */
-        const MOBILE_DPR = 1.25;
-
-
-        /*
-         * Frame smoothing.
-         *
-         * 0.18 = slower/smoother
-         * 0.28 = balanced
-         * 0.35 = more responsive
-         */
-        const SMOOTHING = 0.28;
-
-
-        /*
-         * Number of nearby frames searched if an exact
-         * frame isn't available.
-         */
-        const FALLBACK_SEARCH_RADIUS = 8;
-
-
-
-        /* =====================================================
-           DEVICE DETECTION
-           ===================================================== */
-
-        const isMobile =
-            window.innerWidth <=
-            MOBILE_BREAKPOINT;
-
-
-        /*
-         * This is the important part.
-         *
-         * Mobile:
-         * mbg-frames/
-         *
-         * Desktop:
-         * bg-frames/
-         */
-        const FRAME_FOLDER =
-            isMobile
-                ? MOBILE_FOLDER
-                : DESKTOP_FOLDER;
-
-
-        const FRAME_PREFIX =
-            isMobile
-                ? MOBILE_PREFIX
-                : DESKTOP_PREFIX;
-
-
-
-        console.log(
-            `OPULER frame mode: ${
-                isMobile
-                    ? 'MOBILE'
-                    : 'DESKTOP'
-            }`
+    function dpr() {
+        return Math.min(
+            window.devicePixelRatio || 1,
+            isMobile ? MOBILE_DPR : DESKTOP_DPR
         );
+    }
 
+    function urlFor(source, ext, index) {
+        const n = String(index + 1).padStart(4, '0');
+        return `${source.folder}${source.prefix}${n}${ext}`;
+    }
 
-        console.log(
-            `Frame folder: ${FRAME_FOLDER}`
-        );
+    function updateProgress() {
+        const percent = Math.round((loaded / TOTAL_FRAMES) * 100);
+        if (loaderProgressBar) loaderProgressBar.style.width = `${percent}%`;
+        if (loaderPercent) loaderPercent.textContent = `${percent}%`;
+        if (loaderStatus) loaderStatus.textContent = `Loading frames • ${loaded}/${TOTAL_FRAMES}`;
+    }
 
-
-
-        /* =====================================================
-           ELEMENTS
-           ===================================================== */
-
-        const loader =
-            document.getElementById(
-                'siteLoader'
-            );
-
-
-        const loaderPreview =
-            document.getElementById(
-                'loaderPreview'
-            );
-
-
-        const loaderProgressBar =
-            document.getElementById(
-                'loaderProgressBar'
-            );
-
-
-        const loaderPercent =
-            document.getElementById(
-                'loaderPercent'
-            );
-
-
-        const loaderStatus =
-            document.getElementById(
-                'loaderStatus'
-            );
-
-
-        const hero =
-            document.querySelector(
-                '.hero-frame-section'
-            );
-
-
-        const canvas =
-            document.getElementById(
-                'heroCanvas'
-            );
-
-
-        const hint =
-            document.getElementById(
-                'heroScrollHint'
-            );
-
-
-        if (
-            !hero ||
-            !canvas
-        ) {
-
-            console.error(
-                'Hero frame elements not found.'
-            );
-
-            return;
-
-        }
-
-
-
-        /* =====================================================
-           CANVAS
-           ===================================================== */
-
-        const ctx =
-            canvas.getContext(
-                '2d',
-                {
-                    alpha: false,
-                    desynchronized: true
+    /*
+     * First frame is loaded through an <img> request first.
+     * This is deliberately more compatible with mobile Chrome than
+     * requiring fetch()+createImageBitmap() for every frame.
+     * After decoding, createImageBitmap is used when available.
+     */
+    function loadDecoded(url) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.decoding = 'async';
+            img.onload = async () => {
+                try {
+                    if (img.decode) await img.decode();
+                    if ('createImageBitmap' in window) {
+                        try {
+                            const bitmap = await createImageBitmap(img);
+                            resolve(bitmap);
+                            return;
+                        } catch (_) {}
+                    }
+                    resolve(img);
+                } catch (e) {
+                    reject(e);
                 }
-            );
+            };
+            img.onerror = () => reject(new Error(`Image failed: ${url}`));
+            img.src = url;
+        });
+    }
 
-
-        if (!ctx) {
-
-            console.error(
-                'Canvas is not supported.'
-            );
-
-            return;
-
+    async function findWorkingSource() {
+        for (const source of sources) {
+            for (const ext of extensions) {
+                const url = urlFor(source, ext, 0);
+                try {
+                    const image = await loadDecoded(url);
+                    return { source, ext, firstImage: image };
+                } catch (e) {
+                    console.warn('Frame source failed:', url);
+                }
+            }
         }
+        return null;
+    }
 
+    async function loadFrame(index) {
+        if (frames[index]) return frames[index];
+        if (promises[index]) return promises[index];
+        if (!selectedSource || !selectedExtension) return null;
 
-
-        /* =====================================================
-           FRAME ARRAYS
-           ===================================================== */
-
-        const frames =
-            new Array(
-                TOTAL_FRAMES
-            );
-
-
-        const framePromises =
-            new Array(
-                TOTAL_FRAMES
-            );
-
-
-
-        /* =====================================================
-           STATE
-           ===================================================== */
-
-        let loadedFrames = 0;
-
-        let failedFrames = 0;
-
-
-        let currentFrame = 0;
-
-        let targetFrame = 0;
-
-
-        let canvasWidth = 1;
-
-        let canvasHeight = 1;
-
-
-        let lastDrawnFrame = -1;
-
-
-        let renderRunning = false;
-
-        let scrollQueued = false;
-
-
-
-        /* =====================================================
-           LOCK SCROLL
-           ===================================================== */
-
-        document.documentElement
-            .classList
-            .add(
-                'loader-active'
-            );
-
-
-        document.body
-            .classList
-            .add(
-                'loader-active'
-            );
-
-
-
-        /* =====================================================
-           DPR
-           ===================================================== */
-
-        function getDPR() {
-
-            const maximum =
-                isMobile
-                    ? MOBILE_DPR
-                    : DESKTOP_DPR;
-
-
-            return Math.min(
-                window.devicePixelRatio || 1,
-                maximum
-            );
-
-        }
-
-
-
-        /* =====================================================
-           FRAME URL
-           ===================================================== */
-
-        function frameURL(index) {
-
-            /*
-             * index 0 -> 0001
-             * index 1 -> 0002
-             *
-             * etc.
-             */
-
-            const number =
-                String(
-                    index + 1
-                ).padStart(
-                    4,
-                    '0'
+        promises[index] = (async () => {
+            try {
+                const image = await loadDecoded(
+                    urlFor(selectedSource, selectedExtension, index)
                 );
-
-
-            return (
-                FRAME_FOLDER +
-                FRAME_PREFIX +
-                number +
-                FRAME_EXTENSION
-            );
-
-        }
-
-
-
-        /* =====================================================
-           LOADER PROGRESS
-           ===================================================== */
-
-        function updateLoaderProgress() {
-
-            const completed =
-                loadedFrames +
-                failedFrames;
-
-
-            const percentage =
-                Math.round(
-                    (
-                        completed /
-                        TOTAL_FRAMES
-                    ) * 100
+                frames[index] = image;
+                loaded++;
+                updateProgress();
+                return image;
+            } catch (error) {
+                console.warn(
+                    `Frame ${index + 1} failed:`,
+                    urlFor(selectedSource, selectedExtension, index)
                 );
-
-
-            if (
-                loaderProgressBar
-            ) {
-
-                loaderProgressBar.style.width =
-                    `${percentage}%`;
-
-            }
-
-
-            if (
-                loaderPercent
-            ) {
-
-                loaderPercent.textContent =
-                    `${percentage}%`;
-
-            }
-
-
-            if (
-                loaderStatus
-            ) {
-
-                if (
-                    failedFrames > 0
-                ) {
-
-                    loaderStatus.textContent =
-                        `Loading frames • ${completed}/${TOTAL_FRAMES}`;
-
-                }
-
-                else if (
-                    percentage < 100
-                ) {
-
-                    loaderStatus.textContent =
-                        'Preparing your experience';
-
-                }
-
-                else {
-
-                    loaderStatus.textContent =
-                        'Experience ready';
-
-                }
-
-            }
-
-        }
-
-
-
-        /* =====================================================
-           LOAD + DECODE FRAME
-           ===================================================== */
-
-        async function loadFrame(index) {
-
-            if (
-                index < 0 ||
-                index >= TOTAL_FRAMES
-            ) {
-
                 return null;
-
             }
-
-
-            /*
-             * Already decoded.
-             */
-
-            if (
-                frames[index]
-            ) {
-
-                return frames[index];
-
-            }
-
-
-            /*
-             * Already loading.
-             */
-
-            if (
-                framePromises[index]
-            ) {
-
-                return framePromises[index];
-
-            }
-
-
-            /*
-             * Start loading.
-             */
-
-            framePromises[index] =
-                (async () => {
-
-                    try {
-
-                        let image;
-
-
-
-                        /*
-                         * BEST PATH
-                         *
-                         * fetch
-                         * ↓
-                         * blob
-                         * ↓
-                         * createImageBitmap
-                         */
-
-                        if (
-                            'createImageBitmap'
-                            in window
-                        ) {
-
-                            const response =
-                                await fetch(
-                                    frameURL(index),
-                                    {
-                                        cache:
-                                            'force-cache'
-                                    }
-                                );
-
-
-                            if (
-                                !response.ok
-                            ) {
-
-                                throw new Error(
-                                    `HTTP ${response.status}`
-                                );
-
-                            }
-
-
-                            const blob =
-                                await response.blob();
-
-
-                            image =
-                                await createImageBitmap(
-                                    blob
-                                );
-
-                        }
-
-
-                        /*
-                         * FALLBACK
-                         *
-                         * For browsers that don't support
-                         * createImageBitmap.
-                         */
-
-                        else {
-
-                            image =
-                                new Image();
-
-
-                            image.decoding =
-                                'async';
-
-
-                            image.src =
-                                frameURL(index);
-
-
-                            await image.decode();
-
-                        }
-
-
-
-                        /*
-                         * Store decoded frame.
-                         */
-
-                        frames[index] =
-                            image;
-
-
-                        loadedFrames++;
-
-
-                        updateLoaderProgress();
-
-
-
-                        /*
-                         * Show first frame inside loader.
-                         */
-
-                        if (
-                            index === 0 &&
-                            loaderPreview
-                        ) {
-
-                            loaderPreview.src =
-                                frameURL(0);
-
-
-                            loaderPreview.classList
-                                .add(
-                                    'loaded'
-                                );
-
-                        }
-
-
-
-                        /*
-                         * Draw first hero frame.
-                         */
-
-                        if (
-                            index === 0
-                        ) {
-
-                            resizeCanvas();
-
-                            drawFrame(0);
-
-                        }
-
-
-                        return image;
-
-                    }
-
-
-                    catch (error) {
-
-                        failedFrames++;
-
-
-                        updateLoaderProgress();
-
-
-                        console.error(
-                            `Failed: ${frameURL(index)}`,
-                            error
-                        );
-
-
-                        return null;
-
-                    }
-
-                })();
-
-
-            return framePromises[index];
-
+        })();
+
+        return promises[index];
+    }
+
+    function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        canvasWidth = Math.max(1, Math.round(rect.width));
+        canvasHeight = Math.max(1, Math.round(rect.height));
+        const scale = dpr();
+        const w = Math.round(canvasWidth * scale);
+        const h = Math.round(canvasHeight * scale);
+
+        if (canvas.width !== w || canvas.height !== h) {
+            canvas.width = w;
+            canvas.height = h;
+            ctx.setTransform(scale, 0, 0, scale, 0, 0);
+            lastDrawn = -1;
         }
 
+        const index = Math.round(currentFrame);
+        if (frames[index]) drawFrame(index);
+    }
 
+    function drawFrame(index) {
+        const image = frames[index];
+        if (!image || lastDrawn === index) return;
 
-        /* =====================================================
-           PRELOAD ALL FRAMES
-           ===================================================== */
+        const iw = image.width || image.naturalWidth;
+        const ih = image.height || image.naturalHeight;
+        if (!iw || !ih) return;
 
-        async function preloadAllFrames() {
+        const scale = Math.max(canvasWidth / iw, canvasHeight / ih);
+        const width = iw * scale;
+        const height = ih * scale;
+        const x = (canvasWidth - width) / 2;
+        const y = (canvasHeight - height) / 2;
 
-            let nextIndex = 0;
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        ctx.drawImage(image, x, y, width, height);
+        lastDrawn = index;
+    }
 
-
-            /*
-             * Network information.
-             */
-
-            const connection =
-                navigator.connection ||
-                navigator.webkitConnection ||
-                navigator.mozConnection;
-
-
-            const effectiveType =
-                connection?.effectiveType ||
-                '';
-
-
-            /*
-             * Default workers.
-             */
-            let workers = 5;
-
-
-            /*
-             * Reduce simultaneous downloads on slower
-             * networks.
-             */
-
-            if (
-                effectiveType === 'slow-2g' ||
-                effectiveType === '2g'
-            ) {
-
-                workers = 2;
-
-            }
-
-            else if (
-                effectiveType === '3g'
-            ) {
-
-                workers = 3;
-
-            }
-
-
-
-            /*
-             * Mobile devices get slightly fewer simultaneous
-             * decodes to reduce memory/CPU pressure.
-             */
-
-            if (
-                isMobile
-            ) {
-
-                workers =
-                    Math.min(
-                        workers,
-                        4
-                    );
-
-            }
-
-
-
-            async function worker() {
-
-                while (true) {
-
-                    const index =
-                        nextIndex++;
-
-
-                    if (
-                        index >=
-                        TOTAL_FRAMES
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    await loadFrame(
-                        index
-                    );
-
-
-                    /*
-                     * Yield to browser.
-                     */
-
-                    if (
-                        index % 3 === 0
-                    ) {
-
-                        await new Promise(
-                            requestAnimationFrame
-                        );
-
-                    }
-
-                }
-
-            }
-
-
-
-            const jobs = [];
-
-
-            for (
-                let i = 0;
-                i < workers;
-                i++
-            ) {
-
-                jobs.push(
-                    worker()
-                );
-
-            }
-
-
-            await Promise.all(
-                jobs
-            );
-
+    function drawNearest(index) {
+        if (frames[index]) {
+            drawFrame(index);
+            return;
         }
 
-
-
-        /* =====================================================
-           CANVAS RESIZE
-           ===================================================== */
-
-        function resizeCanvas() {
-
-            const rect =
-                canvas.getBoundingClientRect();
-
-
-            const width =
-                Math.max(
-                    1,
-                    Math.round(
-                        rect.width
-                    )
-                );
-
-
-            const height =
-                Math.max(
-                    1,
-                    Math.round(
-                        rect.height
-                    )
-                );
-
-
-            const dpr =
-                getDPR();
-
-
-            const pixelWidth =
-                Math.round(
-                    width * dpr
-                );
-
-
-            const pixelHeight =
-                Math.round(
-                    height * dpr
-                );
-
-
-            /*
-             * Only resize canvas if necessary.
-             */
-
-            if (
-                canvas.width !==
-                    pixelWidth ||
-                canvas.height !==
-                    pixelHeight
-            ) {
-
-                canvas.width =
-                    pixelWidth;
-
-
-                canvas.height =
-                    pixelHeight;
-
-
-                /*
-                 * DPR scaling.
-                 */
-
-                ctx.setTransform(
-                    dpr,
-                    0,
-                    0,
-                    dpr,
-                    0,
-                    0
-                );
-
-
-                canvasWidth =
-                    width;
-
-
-                canvasHeight =
-                    height;
-
-
-                lastDrawnFrame =
-                    -1;
-
-
-                /*
-                 * Redraw current frame.
-                 */
-
-                const index =
-                    Math.round(
-                        currentFrame
-                    );
-
-
-                if (
-                    frames[index]
-                ) {
-
-                    drawFrame(
-                        index
-                    );
-
-                }
-
-            }
-
-        }
-
-
-
-        /* =====================================================
-           DRAW FRAME
-           ===================================================== */
-
-        function drawFrame(index) {
-
-            const image =
-                frames[index];
-
-
-            if (
-                !image
-            ) {
-
-                return false;
-
-            }
-
-
-            /*
-             * Don't redraw the same frame.
-             */
-
-            if (
-                lastDrawnFrame ===
-                index
-            ) {
-
-                return true;
-
-            }
-
-
-            const imageWidth =
-                image.width;
-
-
-            const imageHeight =
-                image.height;
-
-
-            /*
-             * object-fit: cover
-             */
-
-            const scale =
-                Math.max(
-
-                    canvasWidth /
-                        imageWidth,
-
-                    canvasHeight /
-                        imageHeight
-
-                );
-
-
-            const width =
-                imageWidth *
-                scale;
-
-
-            const height =
-                imageHeight *
-                scale;
-
-
-            const x =
-                (
-                    canvasWidth -
-                    width
-                ) / 2;
-
-
-            const y =
-                (
-                    canvasHeight -
-                    height
-                ) / 2;
-
-
-            /*
-             * Clear.
-             */
-
-            ctx.clearRect(
-                0,
-                0,
-                canvasWidth,
-                canvasHeight
-            );
-
-
-            /*
-             * Draw decoded ImageBitmap.
-             */
-
-            ctx.drawImage(
-                image,
-                x,
-                y,
-                width,
-                height
-            );
-
-
-            lastDrawnFrame =
-                index;
-
-
-            return true;
-
-        }
-
-
-
-        /* =====================================================
-           FALLBACK FRAME
-           ===================================================== */
-
-        function drawNearestAvailable(
-            index
-        ) {
-
-            /*
-             * Exact frame.
-             */
-
-            if (
-                frames[index]
-            ) {
-
-                drawFrame(
-                    index
-                );
-
+        for (let d = 1; d <= 10; d++) {
+            const a = index - d;
+            const b = index + d;
+            if (a >= 0 && frames[a]) {
+                drawFrame(a);
                 return;
-
             }
-
-
-            /*
-             * Search nearby.
-             */
-
-            for (
-                let distance = 1;
-
-                distance <=
-                    FALLBACK_SEARCH_RADIUS;
-
-                distance++
-            ) {
-
-
-                const previous =
-                    index -
-                    distance;
-
-
-                const next =
-                    index +
-                    distance;
-
-
-
-                if (
-                    previous >= 0 &&
-                    frames[previous]
-                ) {
-
-                    drawFrame(
-                        previous
-                    );
-
-                    return;
-
-                }
-
-
-
-                if (
-                    next <
-                        TOTAL_FRAMES &&
-                    frames[next]
-                ) {
-
-                    drawFrame(
-                        next
-                    );
-
-                    return;
-
-                }
-
-            }
-
-        }
-
-
-
-        /* =====================================================
-           SCROLL -> FRAME
-           ===================================================== */
-
-        function calculateTargetFrame() {
-
-            const rect =
-                hero.getBoundingClientRect();
-
-
-            /*
-             * How much scroll is available
-             * inside the hero section.
-             */
-
-            const scrollDistance =
-                hero.offsetHeight -
-                window.innerHeight;
-
-
-            if (
-                scrollDistance <= 0
-            ) {
-
-                return 0;
-
-            }
-
-
-            let progress =
-                -rect.top /
-                scrollDistance;
-
-
-            /*
-             * Clamp 0 -> 1.
-             */
-
-            progress =
-                Math.max(
-                    0,
-                    Math.min(
-                        1,
-                        progress
-                    )
-                );
-
-
-            /*
-             * 0 -> 100.
-             */
-
-            return Math.round(
-                progress *
-                (
-                    TOTAL_FRAMES - 1
-                )
-            );
-
-        }
-
-
-
-        /* =====================================================
-           FRAME RENDER LOOP
-           ===================================================== */
-
-        function renderLoop() {
-
-            const difference =
-                targetFrame -
-                currentFrame;
-
-
-            /*
-             * Close enough.
-             */
-
-            if (
-                Math.abs(
-                    difference
-                ) < 0.02
-            ) {
-
-                currentFrame =
-                    targetFrame;
-
-            }
-
-
-            /*
-             * Smoothly approach target.
-             */
-
-            else {
-
-                currentFrame +=
-                    difference *
-                    SMOOTHING;
-
-            }
-
-
-            const frameIndex =
-                Math.max(
-
-                    0,
-
-                    Math.min(
-
-                        TOTAL_FRAMES - 1,
-
-                        Math.round(
-                            currentFrame
-                        )
-
-                    )
-
-                );
-
-
-            drawNearestAvailable(
-                frameIndex
-            );
-
-
-            /*
-             * Continue until target is reached.
-             */
-
-            if (
-                Math.abs(
-                    targetFrame -
-                    currentFrame
-                ) > 0.02
-            ) {
-
-                requestAnimationFrame(
-                    renderLoop
-                );
-
-            }
-
-
-            else {
-
-                renderRunning =
-                    false;
-
-            }
-
-        }
-
-
-
-        /* =====================================================
-           SCROLL HANDLER
-           ===================================================== */
-
-        function handleScroll() {
-
-            targetFrame =
-                calculateTargetFrame();
-
-
-
-            /*
-             * Hide scroll indicator.
-             */
-
-            if (
-                hint
-            ) {
-
-                const rect =
-                    hero.getBoundingClientRect();
-
-
-                const distance =
-                    hero.offsetHeight -
-                    window.innerHeight;
-
-
-                let progress = 0;
-
-
-                if (
-                    distance > 0
-                ) {
-
-                    progress =
-                        -rect.top /
-                        distance;
-
-                }
-
-
-                progress =
-                    Math.max(
-                        0,
-                        Math.min(
-                            1,
-                            progress
-                        )
-                    );
-
-
-                hint.style.opacity =
-                    progress > .025
-                        ? '0'
-                        : '.9';
-
-            }
-
-
-
-            /*
-             * Start rendering.
-             */
-
-            if (
-                !renderRunning
-            ) {
-
-                renderRunning =
-                    true;
-
-
-                requestAnimationFrame(
-                    renderLoop
-                );
-
-            }
-
-
-            scrollQueued =
-                false;
-
-        }
-
-
-
-        /*
-         * Throttled scroll listener.
-         */
-
-        function onScroll() {
-
-            if (
-                scrollQueued
-            ) {
-
+            if (b < TOTAL_FRAMES && frames[b]) {
+                drawFrame(b);
                 return;
-
             }
+        }
+    }
 
+    function getProgress() {
+        const distance = hero.offsetHeight - window.innerHeight;
+        if (distance <= 0) return 0;
+        const rect = hero.getBoundingClientRect();
+        return Math.max(0, Math.min(1, -rect.top / distance));
+    }
 
-            scrollQueued =
-                true;
+    function calculateTarget() {
+        return Math.round(getProgress() * (TOTAL_FRAMES - 1));
+    }
 
+    function render() {
+        const difference = targetFrame - currentFrame;
 
-            requestAnimationFrame(
-                handleScroll
-            );
-
+        if (Math.abs(difference) < 0.03) {
+            currentFrame = targetFrame;
+        } else {
+            currentFrame += difference * SMOOTHING;
         }
 
+        drawNearest(Math.round(currentFrame));
 
+        if (Math.abs(targetFrame - currentFrame) > 0.03) {
+            requestAnimationFrame(render);
+        } else {
+            renderRunning = false;
+        }
+    }
 
-        /* =====================================================
-           RETRY FAILED FRAMES
-           ===================================================== */
+    function onScroll() {
+        targetFrame = calculateTarget();
 
-        async function retryFailedFrames() {
-
-            /*
-             * Get indexes that don't exist.
-             */
-
-            const missing = [];
-
-
-            for (
-                let i = 0;
-                i < TOTAL_FRAMES;
-                i++
-            ) {
-
-                if (
-                    !frames[i]
-                ) {
-
-                    missing.push(
-                        i
-                    );
-
-                }
-
-            }
-
-
-            if (
-                missing.length === 0
-            ) {
-
-                return;
-
-            }
-
-
-            console.log(
-                'Retrying missing frames:',
-                missing.length
-            );
-
-
-            /*
-             * Reset promises for missing frames.
-             */
-
-            for (
-                const index of missing
-            ) {
-
-                framePromises[index] =
-                    null;
-
-            }
-
-
-            /*
-             * Retry sequentially.
-             */
-
-            for (
-                const index of missing
-            ) {
-
-                await loadFrame(
-                    index
-                );
-
-            }
-
+        if (hint) {
+            hint.style.opacity = getProgress() > 0.02 ? '0' : '.9';
         }
 
+        if (!renderRunning) {
+            renderRunning = true;
+            requestAnimationFrame(render);
+        }
+    }
 
+    function queueScroll() {
+        if (scrollQueued) return;
+        scrollQueued = true;
+        requestAnimationFrame(() => {
+            onScroll();
+            scrollQueued = false;
+        });
+    }
 
-        /* =====================================================
-           START EXPERIENCE
-           ===================================================== */
+    async function preloadRemaining() {
+        /* Small concurrency keeps mobile RAM/CPU under control. */
+        const workers = isMobile ? 3 : 6;
+        let next = 1;
 
-        async function startExperience() {
-
-            /*
-             * Load all frames.
-             */
-
-            await preloadAllFrames();
-
-
-            /*
-             * Retry anything that failed.
-             */
-
-            await retryFailedFrames();
-
-
-            /*
-             * Check if everything is ready.
-             */
-
-            let allReady = true;
-
-
-            for (
-                let i = 0;
-                i < TOTAL_FRAMES;
-                i++
-            ) {
-
-                if (
-                    !frames[i]
-                ) {
-
-                    allReady = false;
-
-                    break;
-
+        async function worker() {
+            while (true) {
+                const index = next++;
+                if (index >= TOTAL_FRAMES) return;
+                await loadFrame(index);
+                if (index % 4 === 0) {
+                    await new Promise(requestAnimationFrame);
                 }
-
             }
-
-
-
-            /* =================================================
-               SUCCESS
-               ================================================= */
-
-            if (
-                allReady
-            ) {
-
-                console.log(
-                    'All OPULER frames decoded successfully.'
-                );
-
-
-                /*
-                 * Resize canvas.
-                 */
-
-                resizeCanvas();
-
-
-                /*
-                 * Start on frame 1.
-                 */
-
-                currentFrame =
-                    0;
-
-
-                targetFrame =
-                    0;
-
-
-                drawFrame(0);
-
-
-                /*
-                 * Loader = 100%.
-                 */
-
-                if (
-                    loaderProgressBar
-                ) {
-
-                    loaderProgressBar.style.width =
-                        '100%';
-
-                }
-
-
-                if (
-                    loaderPercent
-                ) {
-
-                    loaderPercent.textContent =
-                        '100%';
-
-                }
-
-
-                if (
-                    loaderStatus
-                ) {
-
-                    loaderStatus.textContent =
-                        'Experience ready';
-
-                }
-
-
-                /*
-                 * Allow browser to paint frame 1.
-                 */
-
-                await new Promise(
-                    resolve =>
-                        setTimeout(
-                            resolve,
-                            300
-                        )
-                );
-
-
-                /*
-                 * Fade out loader.
-                 */
-
-                if (
-                    loader
-                ) {
-
-                    loader.classList.add(
-                        'loader-hidden'
-                    );
-
-                }
-
-
-                /*
-                 * Unlock scrolling.
-                 */
-
-                document.documentElement
-                    .classList
-                    .remove(
-                        'loader-active'
-                    );
-
-
-                document.body
-                    .classList
-                    .remove(
-                        'loader-active'
-                    );
-
-
-                /*
-                 * Remove loader after fade.
-                 */
-
-                setTimeout(
-                    () => {
-
-                        if (
-                            loader
-                        ) {
-
-                            loader.remove();
-
-                        }
-
-                    },
-                    900
-                );
-
-
-                /*
-                 * Synchronize with current
-                 * scroll position.
-                 */
-
-                targetFrame =
-                    calculateTargetFrame();
-
-
-                currentFrame =
-                    targetFrame;
-
-
-                drawNearestAvailable(
-                    targetFrame
-                );
-
-            }
-
-
-
-            /* =================================================
-               FAILURE
-               ================================================= */
-
-            else {
-
-                console.error(
-                    'Some frame files are missing.'
-                );
-
-
-                if (
-                    loaderStatus
-                ) {
-
-                    loaderStatus.textContent =
-                        `Unable to load all frames. Loaded ${loadedFrames}/${TOTAL_FRAMES}.`;
-
-                }
-
-                /*
-                 * IMPORTANT:
-                 *
-                 * The website remains locked instead of
-                 * showing a black/broken hero.
-                 */
-
-            }
-
         }
 
-
-
-        /* =====================================================
-           RESIZE OBSERVER
-           ===================================================== */
-
-        if (
-            'ResizeObserver' in window
-        ) {
-
-            const resizeObserver =
-                new ResizeObserver(
-                    () => {
-
-                        resizeCanvas();
-
-                    }
-                );
-
-
-            resizeObserver.observe(
-                canvas
-            );
-
-        }
-
-
-        else {
-
-            window.addEventListener(
-                'resize',
-                resizeCanvas,
-                {
-                    passive: true
-                }
-            );
-
-        }
-
-
-
-        /* =====================================================
-           SCROLL
-           ===================================================== */
-
-        window.addEventListener(
-            'scroll',
-            onScroll,
-            {
-                passive: true
-            }
+        await Promise.all(
+            Array.from({ length: workers }, worker)
         );
+    }
 
-
-
-        /* =====================================================
-           MOBILE MENU
-           ===================================================== */
-
-        const menuToggle =
-            document.getElementById(
-                'menu-toggle'
-            );
-
-
-        const navLinks =
-            document.getElementById(
-                'nav-links'
-            );
-
-
-        if (
-            menuToggle &&
-            navLinks
-        ) {
-
-            menuToggle.addEventListener(
-                'click',
-                () => {
-
-                    navLinks.classList.toggle(
-                        'active'
-                    );
-
-                }
-            );
-
+    async function start() {
+        if (loaderStatus) {
+            loaderStatus.textContent = isMobile
+                ? 'Preparing mobile experience'
+                : 'Preparing your experience';
         }
 
+        console.log('OPULER mode:', isMobile ? 'MOBILE' : 'DESKTOP');
+        console.log('Trying mobile source first:', isMobile);
 
+        /* Find an actually working first frame before locking the page. */
+        const working = await findWorkingSource();
 
-        /* =====================================================
-           INITIALIZE
-           ===================================================== */
+        if (!working) {
+            console.error('NO FRAME SOURCE FOUND.');
+            if (loaderStatus) {
+                loaderStatus.textContent = 'Frame 0001 could not be found';
+            }
+            if (loaderPercent) loaderPercent.textContent = 'ERROR';
+            return;
+        }
+
+        selectedSource = working.source;
+        selectedExtension = working.ext;
+        frames[0] = working.firstImage;
+        loaded = 1;
+
+        console.log(
+            'Using frames:',
+            selectedSource.folder + selectedSource.prefix + '0001' + selectedExtension
+        );
 
         resizeCanvas();
-
+        drawFrame(0);
+        updateProgress();
 
         /*
-         * Start loading.
+         * Do NOT wait for all 101 frames before releasing the loader.
+         * This is the main mobile reliability improvement.
          */
+        if (loaderStatus) {
+            loaderStatus.textContent = 'Experience ready';
+        }
+        if (loaderProgressBar) loaderProgressBar.style.width = '100%';
+        if (loaderPercent) loaderPercent.textContent = '100%';
 
-        startExperience();
+        await new Promise(resolve => setTimeout(resolve, 250));
 
+        if (loader) loader.classList.add('loader-hidden');
+        document.documentElement.classList.remove('loader-active');
+        document.body.classList.remove('loader-active');
 
-    })();
+        setTimeout(() => loader?.remove(), 900);
 
+        targetFrame = calculateTarget();
+        currentFrame = targetFrame;
+        drawNearest(Math.round(targetFrame));
+
+        /* Continue loading remaining frames after the page is usable. */
+        preloadRemaining().then(() => {
+            console.log(`OPULER: ${loaded}/${TOTAL_FRAMES} frames loaded.`);
+        });
+    }
+
+    if ('ResizeObserver' in window) {
+        new ResizeObserver(resizeCanvas).observe(canvas);
+    } else {
+        window.addEventListener('resize', resizeCanvas, { passive: true });
+    }
+
+    window.addEventListener('scroll', queueScroll, { passive: true });
+    window.addEventListener('resize', resizeCanvas, { passive: true });
+
+    resizeCanvas();
+    start();
+})();
 </script>
 
 
