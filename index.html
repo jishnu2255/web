@@ -8,8 +8,6 @@
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://opulergroup.com/">
 <link rel="icon" href="opular-logo.png" type="image/png">
-<link rel="preload" as="image" href="mbg-frames/mbg-0001.webp" fetchpriority="high" media="(max-width: 768px)">
-<link rel="preload" as="image" href="bg-frames/bg-0001.webp" fetchpriority="high" media="(min-width: 769px)">
 <link rel="stylesheet" href="style.css">
 <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></noscript>
@@ -47,14 +45,61 @@ html.loader-active,body.loader-active{overflow:hidden!important}
 #siteLoader{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#080706;color:#fff;opacity:1;visibility:visible;transition:opacity .45s ease,visibility .45s ease}
 #siteLoader.loader-hidden{opacity:0;visibility:hidden;pointer-events:none}
 .loader-inner{width:min(380px,80vw);text-align:center}.loader-logo{width:min(150px,42vw);height:auto;max-height:90px;object-fit:contain;display:block;margin:0 auto 28px}.loader-brand{margin:0 0 7px;font-size:13px;font-weight:500;letter-spacing:5px}.loader-status{margin:0 0 15px;font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.65}.loader-progress-track{width:100%;height:2px;background:rgba(255,255,255,.18);overflow:hidden}.loader-progress-bar{width:0;height:100%;background:#fff;transition:width .12s linear}.loader-percent{margin-top:10px;font-size:11px;letter-spacing:2px;opacity:.8}
-.hero-frame-section{position:relative;height:500vh;margin:0;padding:0;background:#000}.hero-frame-sticky{position:sticky;top:0;width:100%;height:100vh;height:100svh;min-height:500px;overflow:hidden;background:#000;isolation:isolate;contain:layout paint}.hero-frame{position:absolute;inset:0;width:100%;height:100%;display:block;background:#000}.hero-frame-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.16),rgba(0,0,0,.04) 45%,rgba(0,0,0,.52))}.hero-frame-section .hero-content{position:absolute;z-index:2;left:8%;bottom:14%;max-width:760px;color:#fff}.hero-frame-section .hero-content h1{margin-bottom:14px}.hero-frame-section .hero-content p{margin-bottom:24px}.hero-scroll-hint{position:absolute;z-index:3;left:50%;bottom:30px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:7px;color:#fff;font-size:11px;letter-spacing:3px;opacity:.9;pointer-events:none}.hero-scroll-hint i{animation:heroArrowBounce 1.4s infinite}@keyframes heroArrowBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+/* HERO: animated interior-design line-art scene (no scroll animation) */
+.hero-interior{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;padding:120px 8% 12vh;background:#080706;overflow:hidden;isolation:isolate}
+.hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero-ambient{position:absolute;inset:0;background:radial-gradient(60% 70% at 78% 38%,rgba(197,164,126,.17),transparent 70%),radial-gradient(45% 45% at 8% 100%,rgba(197,164,126,.08),transparent 70%),linear-gradient(180deg,#0e0b09,#080706);animation:ambientShift 14s ease-in-out infinite alternate}
+@keyframes ambientShift{from{opacity:.8;transform:scale(1)}to{opacity:1;transform:scale(1.05)}}
+.hero-scene{position:absolute;right:6%;bottom:0;width:56%;height:100%}
+.hero-scene svg{width:100%;height:100%;display:block;overflow:visible}
+.hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,7,6,.94) 0%,rgba(8,7,6,.76) 30%,rgba(8,7,6,0) 58%),linear-gradient(0deg,rgba(8,7,6,.5),transparent 32%)}
+.hero-interior .hero-content{position:relative;z-index:2;max-width:620px;color:#fff}
+.hero-interior .hero-content h1{font-size:clamp(2.2rem,4.2vw,3.6rem);margin-bottom:16px}
+.hero-interior .hero-content p{font-size:1.1rem;margin-bottom:26px;max-width:540px}
+.hero-interior.is-armed .hero-content{opacity:0;transform:translateY(14px)}
+.hero-interior.is-live .hero-content{opacity:1;transform:none;transition:opacity 1s ease .3s,transform 1s ease .3s}
+/* line art: draws itself once, then the room settles into gentle loops */
+.hero-scene .draw{fill:none;stroke:#c5a47e;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 2;stroke-dashoffset:0}
+.hero-scene .draw.floor{stroke:url(#floorFade)}
+.hero-scene .draw.soft{stroke-opacity:.35}
+.hero-scene .draw.soft2{stroke-opacity:.55}
+.hero-interior.is-armed .draw{stroke-dashoffset:1}
+.hero-interior.is-live .draw{animation:drawOn 2.2s cubic-bezier(.6,.05,.2,1) both;animation-delay:var(--d,0s)}
+@keyframes drawOn{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.hero-scene .glass,.hero-scene .beam,.hero-scene .bulb{opacity:0}
+.hero-interior.is-live .glass{animation:fadeIn 1.8s ease 2.6s forwards}
+.hero-interior.is-live .beam{animation:fadeIn 2.2s ease 3s forwards,beamDrift 11s ease-in-out 5.2s infinite alternate}
+.hero-interior.is-live .bulb{animation:fadeIn 1.4s ease 3.3s forwards,bulbBreathe 5s ease-in-out 4.7s infinite alternate}
+@keyframes beamDrift{from{transform:translateX(0);opacity:1}to{transform:translateX(-34px);opacity:.5}}
+@keyframes bulbBreathe{from{opacity:1}to{opacity:.65}}
+.hero-scene .swing{transform-box:fill-box;transform-origin:50% 0}
+.hero-interior.is-live .swing{animation:swing var(--dur,6s) ease-in-out var(--sd,0s) infinite alternate}
+@keyframes swing{from{transform:rotate(-2.4deg)}to{transform:rotate(2.4deg)}}
+.hero-scene .sway{transform-box:fill-box;transform-origin:50% 0}
+.hero-interior.is-live .sway{animation:sway 8s ease-in-out infinite alternate}
+.hero-interior.is-live .sway.alt{animation-duration:9.5s;animation-direction:alternate-reverse}
+@keyframes sway{from{transform:skewX(-.9deg)}to{transform:skewX(.9deg)}}
+.hero-scene .plant{transform-box:fill-box;transform-origin:50% 100%}
+.hero-interior.is-live .plant{animation:plantSway 6.5s ease-in-out infinite alternate}
+@keyframes plantSway{from{transform:rotate(-1.8deg)}to{transform:rotate(1.8deg)}}
+.hero-scene .hex{transform-box:fill-box;transform-origin:50% 50%}
+.hero-interior.is-live .hex.cw{animation:spin 120s linear infinite}
+.hero-interior.is-live .hex.ccw{animation:spin 120s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* floating dust in the light */
+.hero-motes{position:absolute;inset:0}
+.hero-motes i{position:absolute;display:block;border-radius:50%;background:#ecd3ab;opacity:0;animation:mote var(--t,16s) linear var(--dl,0s) infinite}
+@keyframes mote{0%{opacity:0;transform:translate3d(0,0,0)}15%{opacity:.7}85%{opacity:.45}100%{opacity:0;transform:translate3d(var(--dx,30px),-170px,0)}}
+.hero-interior.is-offscreen *{animation-play-state:paused!important}
+@media (max-width:1100px){.hero-scene{right:4%;width:64%}.hero-interior .hero-content{max-width:54%}}
 .sticky-contact-bar{position:fixed;top:50%;right:0;transform:translateY(-50%);display:flex;flex-direction:column;z-index:1000}.sticky-contact-bar a{display:flex;flex-direction:column;align-items:center;justify-content:center;width:80px;height:80px;padding:5px;color:#000;background:#c5a47e;text-decoration:none;font-size:12px;font-family:Arial,sans-serif;transition:background-color .3s ease;box-shadow:-2px 2px 5px rgba(0,0,0,.2)}.sticky-contact-bar a:first-child{border-top-left-radius:10px}.sticky-contact-bar a:last-child{margin-top:2px;border-bottom-left-radius:10px}.sticky-contact-bar a i{font-size:28px;margin-bottom:5px}
 /* SEO + responsive services */
 .seo-intro{max-width:1100px;margin:0 auto;padding:80px 24px 30px;text-align:center}.seo-intro h2{margin-bottom:18px}.seo-intro p{max-width:900px;margin:0 auto 14px;line-height:1.8}.expertise{padding:80px 6%}.expertise>h2{text-align:center;margin-bottom:45px}.expertise-container{width:min(1400px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;align-items:stretch}.expertise-card{min-width:0;height:100%;display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:30px;border-radius:14px}.expertise-card i{font-size:30px;margin-bottom:20px}.expertise-card h3{margin:0 0 12px}.expertise-card p{margin:0;line-height:1.7}.expertise-card:nth-child(n+5){grid-column:span 1}.expertise-card:nth-child(5){grid-column:2}.expertise-card:nth-child(6){grid-column:3}.expertise-card:nth-child(7){grid-column:4}
 .gallery img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}.founder-image img{width:100%;height:auto;display:block}.footer-logo{width:150px;height:auto;display:block}.logo img{width:auto;height:54px;display:block}.loader-logo{width:150px;height:auto}.contact-form button[type=submit]{display:inline-flex;align-items:center;justify-content:center;text-align:center;margin:20px auto 0;padding:15px 30px;line-height:normal}
 @media (max-width:1100px){.expertise-container{grid-template-columns:repeat(2,minmax(0,1fr))}.expertise-card:nth-child(n){grid-column:auto}}
-@media (max-width:768px){.hero-frame-section{height:300vh}.hero-frame-sticky{height:100svh;min-height:0}.hero-frame-section .hero-content{left:6%;right:6%;bottom:12%}.sticky-contact-bar a{width:60px;height:65px}.sticky-contact-bar a i{font-size:22px}.loader-inner{width:min(340px,84vw)}.seo-intro{padding:55px 20px 20px}.expertise{padding:55px 18px}.expertise-container{grid-template-columns:1fr;gap:16px}.expertise-card{padding:24px}.logo img{height:46px}}
-@media (prefers-reduced-motion:reduce){.hero-scroll-hint i{animation:none}}
+@media (max-width:768px){.hero-interior{min-height:max(100svh,720px);padding:0 6% 9vh}.hero-scene{right:0;width:100%;height:38%;top:64px;bottom:auto}.hero-shade{background:linear-gradient(0deg,rgba(8,7,6,.96) 0%,rgba(8,7,6,.84) 40%,rgba(8,7,6,0) 68%)}.hero-interior .hero-content{max-width:none}.hero-interior .hero-content h1{font-size:2.1rem}.hero-interior .hero-content p{font-size:1rem}.sticky-contact-bar a{width:60px;height:65px}.sticky-contact-bar a i{font-size:22px}.loader-inner{width:min(340px,84vw)}.seo-intro{padding:55px 20px 20px}.expertise{padding:55px 18px}.expertise-container{grid-template-columns:1fr;gap:16px}.expertise-card{padding:24px}.logo img{height:46px}}
+@media (prefers-reduced-motion:reduce){.hero-interior *{animation:none!important;transition:none!important}.hero-interior.is-armed .draw{stroke-dashoffset:0}.hero-interior.is-armed .hero-content{opacity:1;transform:none}.hero-scene .glass,.hero-scene .bulb{opacity:1}.hero-scene .beam{opacity:.7}.hero-motes{display:none}}
 </style>
 </head>
 <body>
@@ -78,17 +123,23 @@ html.loader-active,body.loader-active{overflow:hidden!important}
 </nav>
 </header>
 <main>
-<section id="home" class="hero-frame-section">
-  <div class="hero-frame-sticky">
-    <canvas id="heroCanvas" class="hero-frame" aria-label="OPULER GROUP interior design visual animation"></canvas>
-    <div class="hero-frame-overlay"></div>
-    <div class="hero-content">
-      <h1>Luxury Interior Designers in Kerala &amp; UAE</h1>
-      <p>OPULER GROUP creates refined residential and commercial interiors, custom furniture and complete design solutions built around your lifestyle.</p>
-      <a href="#portfolio" class="cta-button">View Our Work</a>
-      <a href="Furnitures.html" class="cta-button">Check Our Furniture</a>
-    </div>
-    <div class="hero-scroll-hint" id="heroScrollHint" aria-hidden="true"><span>SCROLL</span><i class="fa-solid fa-chevron-down"></i></div>
+<section id="home" class="hero-interior is-armed" aria-label="OPULER GROUP luxury interior design">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-ambient"></div>
+    <div class="hero-motes" id="heroMotes"></div>
+    <div class="hero-scene"><svg viewBox="0 0 1000 800" preserveAspectRatio="xMaxYMax meet" xmlns="http://www.w3.org/2000/svg" focusable="false"><defs>
+<linearGradient id="floorFade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1000" y2="0"><stop offset="0" stop-color="#c5a47e" stop-opacity="0"/><stop offset=".25" stop-color="#c5a47e" stop-opacity=".7"/><stop offset=".8" stop-color="#c5a47e" stop-opacity=".7"/><stop offset="1" stop-color="#c5a47e" stop-opacity="0"/></linearGradient>
+<linearGradient id="glassGlow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe2b4" stop-opacity=".26"/><stop offset="1" stop-color="#ffe2b4" stop-opacity=".05"/></linearGradient>
+<linearGradient id="beamGrad" gradientUnits="userSpaceOnUse" x1="670" y1="0" x2="70" y2="0"><stop offset="0" stop-color="#ffe2b4" stop-opacity=".16"/><stop offset="1" stop-color="#ffe2b4" stop-opacity="0"/></linearGradient>
+<radialGradient id="bulbGlow"><stop offset="0" stop-color="#ffd596" stop-opacity=".6"/><stop offset=".35" stop-color="#ffd596" stop-opacity=".16"/><stop offset="1" stop-color="#ffd596" stop-opacity="0"/></radialGradient>
+</defs><g class="soft-line"><path class="draw floor" style="--d:0.00s" pathLength="1" d="M0 640 H1000"/><path class="draw soft" style="--d:0.20s" pathLength="1" d="M20 702 A330 38 0 1 0 680 702 A330 38 0 1 0 20 702"/><path class="draw soft" style="--d:0.35s" pathLength="1" d="M54 702 A296 29 0 1 0 646 702 A296 29 0 1 0 54 702"/><path class="glass" d="M670 640 V250 A90 90 0 0 1 850 250 V640 Z" fill="url(#glassGlow)"/><path class="beam" d="M670 262 L670 470 L330 640 L70 640 Z" fill="url(#beamGrad)"/><path class="draw" style="--d:0.40s" pathLength="1" d="M660 640 V250 A100 100 0 0 1 860 250 V640"/><path class="draw soft2" style="--d:0.55s" pathLength="1" d="M670 640 V250 A90 90 0 0 1 850 250 V640"/><path class="draw soft2" style="--d:0.90s" pathLength="1" d="M760 160 V640"/><path class="draw soft2" style="--d:1.00s" pathLength="1" d="M670 250 H850"/><path class="draw soft2" style="--d:1.08s" pathLength="1" d="M670 330 H850"/><path class="draw soft2" style="--d:1.16s" pathLength="1" d="M670 470 H850"/><path class="draw" style="--d:0.70s" pathLength="1" d="M643 640 H877"/><path class="draw" style="--d:0.90s" pathLength="1" d="M616 128 H904"/><path class="draw" style="--d:1.00s" pathLength="1" d="M608 128 A4 4 0 1 0 616 128 A4 4 0 1 0 608 128"/><path class="draw" style="--d:1.00s" pathLength="1" d="M904 128 A4 4 0 1 0 912 128 A4 4 0 1 0 904 128"/><g class="sway"><path class="draw soft2" style="--d:1.05s" pathLength="1" d="M624 134 C 615 262, 634 430, 619 640"/><path class="draw soft2" style="--d:1.12s" pathLength="1" d="M636 134 C 632 262, 646 430, 632 640"/><path class="draw soft2" style="--d:1.19s" pathLength="1" d="M648 134 C 639 262, 658 430, 645 640"/><path class="draw soft2" style="--d:1.26s" pathLength="1" d="M660 134 C 656 262, 670 430, 658 640"/><path class="draw soft2" style="--d:1.33s" pathLength="1" d="M672 134 C 663 262, 682 430, 671 640"/></g><g class="sway alt"><path class="draw soft2" style="--d:1.05s" pathLength="1" d="M848 134 C 857 262, 838 430, 853 640"/><path class="draw soft2" style="--d:1.12s" pathLength="1" d="M860 134 C 864 262, 850 430, 864 640"/><path class="draw soft2" style="--d:1.19s" pathLength="1" d="M872 134 C 881 262, 862 430, 875 640"/><path class="draw soft2" style="--d:1.26s" pathLength="1" d="M884 134 C 888 262, 874 430, 886 640"/><path class="draw soft2" style="--d:1.33s" pathLength="1" d="M896 134 C 905 262, 886 430, 897 640"/></g><path class="draw" style="--d:1.20s" pathLength="1" d="M146 500 H154 A28 28 0 0 1 182 528 V584 A28 28 0 0 1 154 612 H146 A28 28 0 0 1 118 584 V528 A28 28 0 0 1 146 500 Z"/><path class="draw" style="--d:1.25s" pathLength="1" d="M536 500 H544 A28 28 0 0 1 572 528 V584 A28 28 0 0 1 544 612 H536 A28 28 0 0 1 508 584 V528 A28 28 0 0 1 536 500 Z"/><path class="draw" style="--d:1.35s" pathLength="1" d="M216 455 H474 A34 34 0 0 1 508 489 V539 A34 34 0 0 1 474 573 H216 A34 34 0 0 1 182 539 V489 A34 34 0 0 1 216 455 Z"/><path class="draw" style="--d:1.50s" pathLength="1" d="M198 566 H492 A16 16 0 0 1 508 582 V598 A16 16 0 0 1 492 614 H198 A16 16 0 0 1 182 598 V582 A16 16 0 0 1 198 566 Z"/><path class="draw soft2" style="--d:1.80s" pathLength="1" d="M345 462 C 341 500 349 540 345 573"/><path class="draw soft2" style="--d:1.85s" pathLength="1" d="M345 573 V614"/><path class="draw" style="--d:1.90s" pathLength="1" d="M150 612 L143 640"/><path class="draw" style="--d:1.90s" pathLength="1" d="M540 612 L547 640"/><path class="draw" style="--d:2.00s" pathLength="1" transform="rotate(10 233 528)" d="M214 495 H252 A14 14 0 0 1 266 509 V547 A14 14 0 0 1 252 561 H214 A14 14 0 0 1 200 547 V509 A14 14 0 0 1 214 495 Z"/><path class="draw" style="--d:2.10s" pathLength="1" transform="rotate(-12 467 527)" d="M446 492 H488 A14 14 0 0 1 502 506 V548 A14 14 0 0 1 488 562 H446 A14 14 0 0 1 432 548 V506 A14 14 0 0 1 446 492 Z"/><path class="draw soft2" style="--d:2.30s" pathLength="1" transform="rotate(0)" d="M214 520 L248 535 M214 540 L248 555"/><path class="draw" style="--d:1.60s" pathLength="1" d="M254 250 H446 A4 4 0 0 1 450 254 V386 A4 4 0 0 1 446 390 H254 A4 4 0 0 1 250 386 V254 A4 4 0 0 1 254 250 Z"/><path class="draw soft2" style="--d:1.75s" pathLength="1" d="M264 262 H436 A2 2 0 0 1 438 264 V376 A2 2 0 0 1 436 378 H264 A2 2 0 0 1 262 376 V264 A2 2 0 0 1 264 262 Z"/><g class="hex cw"><path class="draw" style="--d:2.00s" pathLength="1" d="M405.0 320.0 L377.5 367.6 L322.5 367.6 L295.0 320.0 L322.5 272.4 L377.5 272.4 Z"/></g><g class="hex ccw"><path class="draw" style="--d:2.15s" pathLength="1" d="M392.0 320.0 L371.0 356.4 L329.0 356.4 L308.0 320.0 L329.0 283.6 L371.0 283.6 Z"/></g><g class="hex cw"><path class="draw" style="--d:2.30s" pathLength="1" d="M379.0 320.0 L364.5 345.1 L335.5 345.1 L321.0 320.0 L335.5 294.9 L364.5 294.9 Z"/></g><g class="hex ccw"><path class="draw" style="--d:2.45s" pathLength="1" d="M366.0 320.0 L358.0 333.9 L342.0 333.9 L334.0 320.0 L342.0 306.1 L358.0 306.1 Z"/></g><g transform="translate(488 0)"><g class="swing" style="--dur:6.5s;--sd:0s"><path class="draw soft2" style="--d:1.60s" pathLength="1" d="M0 0 V130"/><path class="draw" style="--d:1.95s" pathLength="1" d="M-26 160 C-26 138 -14 130 0 130 C14 130 26 138 26 160 Z"/><path class="draw" style="--d:2.30s" pathLength="1" d="M-6 166 A6 6 0 1 0 6 166 A6 6 0 1 0 -6 166"/><circle class="bulb" cx="0" cy="170" r="52" fill="url(#bulbGlow)"/></g></g><g transform="translate(540 0)"><g class="swing" style="--dur:7.5s;--sd:-2s"><path class="draw soft2" style="--d:1.70s" pathLength="1" d="M0 0 V205"/><path class="draw" style="--d:2.05s" pathLength="1" d="M-26 235 C-26 213 -14 205 0 205 C14 205 26 213 26 235 Z"/><path class="draw" style="--d:2.40s" pathLength="1" d="M-6 241 A6 6 0 1 0 6 241 A6 6 0 1 0 -6 241"/><circle class="bulb" cx="0" cy="245" r="52" fill="url(#bulbGlow)"/></g></g><g transform="translate(592 0)"><g class="swing" style="--dur:5.8s;--sd:-4s"><path class="draw soft2" style="--d:1.80s" pathLength="1" d="M0 0 V165"/><path class="draw" style="--d:2.15s" pathLength="1" d="M-26 195 C-26 173 -14 165 0 165 C14 165 26 173 26 195 Z"/><path class="draw" style="--d:2.50s" pathLength="1" d="M-6 201 A6 6 0 1 0 6 201 A6 6 0 1 0 -6 201"/><circle class="bulb" cx="0" cy="205" r="52" fill="url(#bulbGlow)"/></g></g><path class="draw" style="--d:2.30s" pathLength="1" d="M912 640 L918 592 H952 L958 640 Z"/><g class="plant"><path class="draw" style="--d:2.45s" pathLength="1" d="M935 592 C 925 540, 900 500, 905 440 C 925 480, 935 530, 935 592"/><path class="draw" style="--d:2.57s" pathLength="1" d="M935 592 C 940 520, 950 470, 975 420 C 985 480, 960 540, 935 592"/><path class="draw" style="--d:2.69s" pathLength="1" d="M935 592 C 930 520, 925 450, 940 380 C 960 440, 955 520, 935 592"/><path class="draw" style="--d:2.81s" pathLength="1" d="M935 592 C 915 572, 880 548, 862 512 C 892 522, 920 548, 935 592"/><path class="draw" style="--d:2.93s" pathLength="1" d="M935 592 C 958 568, 982 548, 996 510 C 970 514, 950 542, 935 592"/></g></g></svg></div>
+    <div class="hero-shade"></div>
+  </div>
+  <div class="hero-content">
+    <h1>Luxury Interior Designers in Kerala &amp; UAE</h1>
+    <p>OPULER GROUP creates refined residential and commercial interiors, custom furniture and complete design solutions built around your lifestyle.</p>
+    <a href="#portfolio" class="cta-button">View Our Work</a>
+    <a href="Furnitures.html" class="cta-button">Check Our Furniture</a>
   </div>
 </section>
 <section class="seo-intro" aria-labelledby="seo-heading">
@@ -157,40 +208,36 @@ html.loader-active,body.loader-active{overflow:hidden!important}
 <script>
 (()=>{
 'use strict';
-const TOTAL_FRAMES=101,MOBILE_BREAKPOINT=768,DESKTOP_FOLDER='bg-frames/',MOBILE_FOLDER='mbg-frames/',DESKTOP_PREFIX='bg-',MOBILE_PREFIX='mbg-',EXT='.webp';
-const isMobile=window.innerWidth<=MOBILE_BREAKPOINT;
-const folder=isMobile?MOBILE_FOLDER:DESKTOP_FOLDER,prefix=isMobile?MOBILE_PREFIX:DESKTOP_PREFIX;
-const loader=document.getElementById('siteLoader'),bar=document.getElementById('loaderProgressBar'),percent=document.getElementById('loaderPercent'),status=document.getElementById('loaderStatus'),hero=document.querySelector('.hero-frame-section'),canvas=document.getElementById('heroCanvas'),hint=document.getElementById('heroScrollHint');
-if(!hero||!canvas)return;
-const ctx=canvas.getContext('2d',{alpha:false,desynchronized:true}); if(!ctx)return;
-const frames=new Array(TOTAL_FRAMES),loading=new Array(TOTAL_FRAMES),loaded=new Set();
-let canvasWidth=1,canvasHeight=1,currentFrame=0,targetFrame=0,lastDrawn=-1,raf=0,queueRunning=false,unlocked=false;
-const dpr=Math.min(window.devicePixelRatio||1,isMobile?1.1:1.5);
-function url(i){return folder+prefix+String(i+1).padStart(4,'0')+EXT}
-function progress(){const p=Math.round(loaded.size/TOTAL_FRAMES*100);if(bar)bar.style.width=p+'%';if(percent)percent.textContent=p+'%';if(status)status.textContent=unlocked?(p<100?'Loading animation in background':'Experience ready'):(p<100?'Preparing your experience':'Experience ready')}
-function loadFrame(i,priority=false){if(i<0||i>=TOTAL_FRAMES||frames[i])return Promise.resolve(frames[i]);if(loading[i])return loading[i];loading[i]=new Promise(resolve=>{const img=new Image();img.decoding='async';if('fetchPriority'in img)img.fetchPriority=priority?'high':'low';img.onload=()=>{frames[i]=img;loaded.add(i);progress();resolve(img)};img.onerror=()=>resolve(null);img.src=url(i)});return loading[i]}
-function draw(i){const img=frames[i];if(!img||lastDrawn===i)return !!img;const iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height;if(!iw||!ih)return false;const scale=Math.max(canvasWidth/iw,canvasHeight/ih),w=iw*scale,h=ih*scale,x=(canvasWidth-w)/2,y=(canvasHeight-h)/2;ctx.clearRect(0,0,canvasWidth,canvasHeight);ctx.drawImage(img,x,y,w,h);lastDrawn=i;return true}
-function resize(){const r=canvas.getBoundingClientRect(),w=Math.max(1,Math.round(r.width)),h=Math.max(1,Math.round(r.height));if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);canvasWidth=w;canvasHeight=h;lastDrawn=-1;draw(Math.round(currentFrame))}}
-function target(){const r=hero.getBoundingClientRect(),dist=hero.offsetHeight-window.innerHeight;if(dist<=0)return 0;return Math.max(0,Math.min(TOTAL_FRAMES-1,(-r.top/dist)*(TOTAL_FRAMES-1)))}
-function nearest(i){if(draw(i))return;for(let d=1;d<=10;d++){if(draw(i-d))return;if(draw(i+d))return}}
-function render(){raf=0;const diff=targetFrame-currentFrame;currentFrame=Math.abs(diff)<.15?targetFrame:currentFrame+diff*(isMobile?.5:.32);nearest(Math.round(currentFrame));}
-function onScroll(){targetFrame=target();if(hint)hint.style.opacity=targetFrame>2?'0':'.9';if(!raf)raf=requestAnimationFrame(render);prioritizeAround(Math.round(targetFrame));}
-function prioritizeAround(center){const radius=isMobile?12:18;for(let d=0;d<=radius;d++){const a=center+d,b=center-d;if(a<TOTAL_FRAMES)enqueue(a,true);if(b>=0)enqueue(b,true)}}
-const queue=new Set();
-function enqueue(i,priority=false){if(i<0||i>=TOTAL_FRAMES||frames[i]||loading[i])return;queue.add(i);if(priority)queuePriority(i)}
-function queuePriority(i){/* priority is represented by scheduling a direct load when capacity allows */}
-async function worker(){if(queueRunning)return;queueRunning=true;const concurrency=isMobile?3:4;const run=async()=>{while(queue.size){let best=-1,bestDist=Infinity,c=targetFrame;for(const i of queue){const d=Math.abs(i-c);if(d<bestDist){best=i;bestDist=d}}if(best<0)break;queue.delete(best);await loadFrame(best,Math.abs(best-c)<12);await new Promise(r=>requestAnimationFrame(r))}};await Promise.all(Array.from({length:concurrency},run));queueRunning=false;if(queue.size)worker()}
-function seed(){const initial=isMobile?12:18;for(let i=0;i<initial;i++)enqueue(i,true);for(let i=initial;i<TOTAL_FRAMES;i++)queue.add(i);worker()}
-async function unlockWhenReady(){const minimum=isMobile?6:10;const deadline=performance.now()+(isMobile?1800:2500);while(loaded.size<minimum&&performance.now()<deadline){await new Promise(r=>setTimeout(r,40))}if(!frames[0])await loadFrame(0,true);resize();draw(0);unlocked=true;document.documentElement.classList.remove('loader-active');document.body.classList.remove('loader-active');if(loader)loader.classList.add('loader-hidden');targetFrame=target();currentFrame=targetFrame;nearest(Math.round(currentFrame));}
-// Lock only until the first useful frames are ready; do not wait for all 101 frames.
-document.documentElement.classList.add('loader-active');document.body.classList.add('loader-active');
-resize();
-seed();
-unlockWhenReady();
-window.addEventListener('scroll',onScroll,{passive:true});
-if('ResizeObserver'in window)new ResizeObserver(resize).observe(canvas);else window.addEventListener('resize',resize,{passive:true});
-const menu=document.getElementById('menu-toggle'),nav=document.getElementById('nav-links');if(menu&&nav)menu.addEventListener('click',()=>nav.classList.toggle('active'));
-setTimeout(()=>{if(loader){loader.classList.add('loader-hidden');document.documentElement.classList.remove('loader-active');document.body.classList.remove('loader-active');}},3500);
+const root=document.documentElement,body=document.body;
+const loader=document.getElementById('siteLoader'),bar=document.getElementById('loaderProgressBar'),percent=document.getElementById('loaderPercent'),status=document.getElementById('loaderStatus'),hero=document.getElementById('home'),motes=document.getElementById('heroMotes');
+
+// Dust motes drifting through the light
+if(motes){const f=document.createDocumentFragment();for(let i=0;i<22;i++){const m=document.createElement('i'),s=2+Math.random()*2.5;m.style.cssText='left:'+(38+Math.random()*60)+'%;top:'+(35+Math.random()*60)+'%;width:'+s+'px;height:'+s+'px;--t:'+(13+Math.random()*10)+'s;--dl:-'+(Math.random()*20)+'s;--dx:'+((Math.random()*60)-30)+'px';f.appendChild(m)}motes.appendChild(f)}
+
+// Pause hero animation while it is off screen
+if(hero&&'IntersectionObserver'in window){new IntersectionObserver(e=>hero.classList.toggle('is-offscreen',!e[0].isIntersecting)).observe(hero)}
+
+// Loader: short branded intro, then start the hero scene
+root.classList.add('loader-active');body.classList.add('loader-active');
+let p=0,finished=false;
+const tick=setInterval(()=>{if(!finished){p+=(90-p)*.09;set(p)}},60);
+function set(v){const n=Math.round(v);if(bar)bar.style.width=n+'%';if(percent)percent.textContent=n+'%'}
+function finish(){
+  if(finished)return;finished=true;clearInterval(tick);set(100);if(status)status.textContent='Experience ready';
+  setTimeout(()=>{
+    root.classList.remove('loader-active');body.classList.remove('loader-active');
+    if(loader)loader.classList.add('loader-hidden');
+    setTimeout(()=>{if(hero){hero.classList.remove('is-armed');hero.classList.add('is-live')}},250);
+  },250);
+}
+const minWait=new Promise(r=>setTimeout(r,1100));
+const pageLoaded=new Promise(r=>{if(document.readyState==='complete')r();else window.addEventListener('load',r,{once:true})});
+Promise.all([minWait,pageLoaded]).then(finish);
+setTimeout(finish,4000);
+
+// Mobile menu
+const menu=document.getElementById('menu-toggle'),nav=document.getElementById('nav-links');
+if(menu&&nav)menu.addEventListener('click',()=>nav.classList.toggle('active'));
 })();
 </script>
 </body>
