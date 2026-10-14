@@ -8,6 +8,9 @@
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://opulergroup.com/">
 <link rel="icon" href="opular-logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></noscript>
@@ -114,9 +117,17 @@ html.loader-active,body.loader-active{overflow:hidden!important}
 </div>
 <header>
 <nav>
-  <div class="logo"><img src="opular-logo.png" alt="OPULER GROUP logo" width="150" height="54" fetchpriority="high"></div>
+  <div class="logo">
+    <a href="index.html" aria-label="OPULER GROUP Home">
+      <img src="opular-logo.png" alt="OPULER GROUP logo" width="150" height="54" fetchpriority="high">
+    </a>
+  </div>
   <ul class="nav-links" id="nav-links">
-    <li><a href="#home">Home</a></li><li><a href="#about">About</a></li><li><a href="#services">Services</a></li><li><a href="#portfolio">Portfolio</a></li><li><a href="#contact">Contact</a></li>
+    <li><a href="index.html#home" class="active">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
   </ul>
   <a href="#contact" class="cta-button">GET FREE ESTIMATE</a>
   <div class="menu-toggle" id="menu-toggle" aria-label="Open menu"><i class="fa-solid fa-bars"></i></div>
@@ -138,8 +149,8 @@ html.loader-active,body.loader-active{overflow:hidden!important}
   <div class="hero-content">
     <h1>Luxury Interior Designers in Kerala &amp; UAE</h1>
     <p>OPULER GROUP creates refined residential and commercial interiors, custom furniture and complete design solutions built around your lifestyle.</p>
-    <a href="#portfolio" class="cta-button">View Our Work</a>
-    <a href="Furnitures.html" class="cta-button">Check Our Furniture</a>
+    <a href="portfolio.html" class="cta-button">View Full Portfolio</a>
+    <a href="about.html" class="cta-button cta-outline" style="margin-left: 8px;">Our Story</a>
   </div>
 </section>
 <section class="seo-intro" aria-labelledby="seo-heading">
@@ -167,6 +178,10 @@ html.loader-active,body.loader-active{overflow:hidden!important}
     <div class="gallery-item"><img src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Contemporary bedroom interior design by OPULER GROUP" loading="lazy" decoding="async" width="1200" height="900"><span>Contemporary Bedroom</span></div>
     <div class="gallery-item"><img src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=1200&amp;q=70" alt="Premium workspace interior design by OPULER GROUP" loading="lazy" decoding="async" width="1200" height="900"><span>Premium Workspace</span></div>
   </div>
+  <div class="portfolio-more">
+    <p>Looking for more inspiration? Explore our extensive collection of completed residences, commercial projects, and custom furniture across Kerala &amp; UAE.</p>
+    <a href="portfolio.html" class="cta-button">Explore Full Portfolio <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></a>
+  </div>
 </section>
 <section id="materials" class="materials">
   <h2>Quality &amp; Craftsmanship</h2>
@@ -178,7 +193,15 @@ html.loader-active,body.loader-active{overflow:hidden!important}
 </section>
 <section id="about" class="founder">
   <div class="founder-image"><img src="opular-logo.png" alt="OPULER GROUP interior design company logo" loading="lazy" width="500" height="500"></div>
-  <div class="founder-text"><h2>About OPULER GROUP</h2><p>OPULER GROUP is a team focused on creating considered interior environments with timeless design, practical functionality and fine craftsmanship. From interior planning to furniture and finishing solutions, we aim to make every part of a project feel connected.</p><p>Our goal is to build spaces that are distinctive, comfortable and made to work for the people who use them.</p><a href="#contact" class="cta-button">Start Your Project</a></div>
+  <div class="founder-text">
+    <h2>About OPULER GROUP</h2>
+    <p>OPULER GROUP is a team focused on creating considered interior environments with timeless design, practical functionality and fine craftsmanship. From interior planning to furniture and finishing solutions, we aim to make every part of a project feel connected.</p>
+    <p>Our goal is to build spaces that are distinctive, comfortable and made to work for the people who use them across Kerala and the UAE.</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+      <a href="#contact" class="cta-button">Start Your Project</a>
+      <a href="about.html" class="cta-button cta-outline">Read Our Full Story <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></a>
+    </div>
+  </div>
 </section>
 <section id="reviews" class="reviews">
   <h2>What Our Clients Say</h2>
@@ -199,10 +222,39 @@ html.loader-active,body.loader-active{overflow:hidden!important}
 </section>
 </main>
 <footer>
-  <div class="footer-container"><div class="footer-about"><img src="opular-logo.png" alt="OPULER GROUP logo" class="footer-logo" width="150" height="54" loading="lazy"><p>Designing better spaces for everyday living.</p></div></div>
-  <div class="footer-contact"><h3>Contact Info</h3><p>Dubai &amp; Kerala<br>Kollam Junction</p><p>opulergroup@gmail.com</p></div>
-  <div class="footer-social"><h3>Follow OPULER GROUP</h3><a href="https://www.instagram.com/opuler_group" target="_blank" rel="noopener noreferrer" aria-label="OPULER GROUP on Instagram"><i class="fab fa-instagram"></i></a></div>
-  <div class="footer-bottom"><p>&copy; 2026 OPULER GROUP. All Rights Reserved.</p><a href="#">Privacy Policy</a></div>
+  <div class="footer-container">
+    <div class="footer-about">
+      <a href="index.html">
+        <img src="opular-logo.png" alt="OPULER GROUP logo" class="footer-logo" width="150" height="54" loading="lazy">
+      </a>
+      <p>Designing better spaces for everyday living. Serving clients across Kerala and the UAE.</p>
+    </div>
+    <div class="footer-links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html#home">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="index.html#contact">Get Free Estimate</a></li>
+      </ul>
+    </div>
+    <div class="footer-contact">
+      <h3>Contact Info</h3>
+      <p>Dubai &amp; Kerala<br>Kollam Junction</p>
+      <p><a href="mailto:opulergroup@gmail.com" style="color: inherit;">opulergroup@gmail.com</a></p>
+      <p><a href="tel:+919995808002" style="color: inherit;">+91 99958 08002</a></p>
+    </div>
+    <div class="footer-social">
+      <h3>Follow OPULER GROUP</h3>
+      <a href="https://www.instagram.com/opuler_group" target="_blank" rel="noopener noreferrer" aria-label="OPULER GROUP on Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://wa.me/9995808002" target="_blank" rel="noopener noreferrer" aria-label="Contact on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 OPULER GROUP. All Rights Reserved.</p>
+    <a href="#">Privacy Policy</a>
+  </div>
 </footer>
 <div class="sticky-contact-bar"><a href="https://wa.me/9995808002" target="_blank" rel="noopener noreferrer" aria-label="Contact OPULER GROUP on WhatsApp"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></a><a href="#contact" aria-label="Send an email to OPULER GROUP"><i class="fas fa-envelope"></i><span>Send Mail</span></a></div>
 <script>
@@ -237,7 +289,10 @@ setTimeout(finish,4000);
 
 // Mobile menu
 const menu=document.getElementById('menu-toggle'),nav=document.getElementById('nav-links');
-if(menu&&nav)menu.addEventListener('click',()=>nav.classList.toggle('active'));
+if(menu&&nav){
+  menu.addEventListener('click',()=>nav.classList.toggle('active'));
+  nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>nav.classList.remove('active')));
+}
 })();
 </script>
 </body>
